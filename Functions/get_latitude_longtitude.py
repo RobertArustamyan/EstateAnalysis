@@ -1,8 +1,14 @@
 import requests
-from bs4 import BeautifulSoup
-import pprint
 import re
+
+
 def getting_lat_long(id: int):
+    '''
+    Retrieves the latitude and longitude values associated with a given ID from a web page on list.am.
+
+    :param id: The ID of the item for which latitude and longitude are to be retrieved.
+    :return: A list containing the latitude and longitude values [latitude, longitude], or None if the values cannot be found in the response.
+    '''
     params = {'i': id}
     cookies = {
         'lang': '0',
@@ -40,4 +46,5 @@ def getting_lat_long(id: int):
 
 
 if __name__ == "__main__":
+    #TEST CASE
     print(getting_lat_long(19293046))
