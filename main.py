@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 from Functions.get_latitude_longtitude import getting_lat_long
+import json
 
 class ListAmHouseData:
     cookies = {
@@ -32,7 +33,7 @@ class ListAmHouseData:
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
     }
 
-    def house_data_by_category(self, category, page_count, time_to_repeat):
+    def house_data_links_for_parce_by_category(self, category, page_count, time_to_repeat):
         '''
         Retrieve list of links for parsing per category from list.am
 
@@ -57,49 +58,72 @@ class ListAmHouseData:
                 i += 1
         return links_to_parse
 
+    def house_data_links_json(self, time_to_repeat):
+        links_to_parse1 = self.house_data_links_for_parce_by_category(60, 250, time_to_repeat)
+        # Tneri vacharq
+        links_to_parse2 = self.house_data_links_for_parce_by_category(62, 167, time_to_repeat)
+        # Tneri vardzakalutyun
+        links_to_parse3 = self.house_data_links_for_parce_by_category(63, 68, time_to_repeat)
+        # Avtotnakneri ev avtokayanaterxineri vacharq
+        links_to_parse4 = self.house_data_links_for_parce_by_category(173, 12, time_to_repeat)
+        # Vardzov senyakner
+        links_to_parse5 = self.house_data_links_for_parce_by_category(212, 6, time_to_repeat)
+        # Mijocarumneri anckacman vayrer
+        links_to_parse6 = self.house_data_links_for_parce_by_category(267, 3, time_to_repeat)
+        # Tnakneri ev krpakneri vardzakalutyun
+        links_to_parse7 = self.house_data_links_for_parce_by_category(58, 2, time_to_repeat)
+        # Bnakaranneri erkarajamket vardzakalutyun
+        links_to_parse8 = self.house_data_links_for_parce_by_category(56, 250, time_to_repeat)
+        # Komercion ansharj guyqi ev grasenyakneri vardzakalutyun
+        links_to_parse9 = self.house_data_links_for_parce_by_category(59, 85, time_to_repeat)
+        # Komericon ansharj guyqi vacharq
+        links_to_parse10 = self.house_data_links_for_parce_by_category(199, 58, time_to_repeat)
+        # Nor bnakaranneri vacharq
+        links_to_parse11 = self.house_data_links_for_parce_by_category(268, 9, time_to_repeat)
+            # Avtotnakneri ev avtokayanatexineri vardzakalutyun
+        links_to_parse12 = self.house_data_links_for_parce_by_category(175, 4, time_to_repeat)
+        # Oravardzov senyakner
+        links_to_parse13 = self.house_data_links_for_parce_by_category(275, 3, time_to_repeat)
+        # Hoxataracqneri vacharq
+        links_to_parse14 = self.house_data_links_for_parce_by_category(55, 175, time_to_repeat)
+        # Oravardzov bnakaranner
+        links_to_parse15 = self.house_data_links_for_parce_by_category(166, 79, time_to_repeat)
+        # Oravardzov tner
+        links_to_parse16 = self.house_data_links_for_parce_by_category(222, 33, time_to_repeat)
+        # Tnakneri ev krpakneri vacharq
+        links_to_parse17 = self.house_data_links_for_parce_by_category(61, 7, time_to_repeat)
+        # Norakaruyc tneri vacharq
+        links_to_parse18 = self.house_data_links_for_parce_by_category(269, 3, time_to_repeat)
+        # Hoxataracqneri vardzakalutyun
+        links_to_parse19 = self.house_data_links_for_parce_by_category(270, 3, time_to_repeat)
+
+        data = {
+            "apartments-sale": list(set(links_to_parse1)),
+            "houses-sale": list(set(links_to_parse2)),
+            "houses-rent": list(set(links_to_parse3)),
+            "garages-parking-slots-sale": list(set(links_to_parse4)),
+            "rooms-rent": list(set(links_to_parse5)),
+            "event-venues": list(set(links_to_parse6)),
+            "tnak-krpak-rent": list(set(links_to_parse7)),
+            "apartments-rent-long_term": list(set(links_to_parse8)),
+            "commercial-estate-offices-rent": list(set(links_to_parse9)),
+            "commercial-estate-sale": list(set(links_to_parse10)),
+            "new-apartments-sale": list(set(links_to_parse11)),
+            "garages-parking-slots-rent": list(set(links_to_parse12)),
+            "rooms-daily-rent": list(set(links_to_parse13)),
+            "land-sale": list(set(links_to_parse14)),
+            "daily-apartments-rent": list(set(links_to_parse15)),
+            "daily-house-rent": list(set(links_to_parse16)),
+            "tnak-krpak-sale": list(set(links_to_parse17)),
+            "new-houses-sale": list(set(links_to_parse18)),
+            "land-rent": list(set(links_to_parse19))
+        }
+        json_data = json.dumps(data, indent=4)
+        with open("Data/house_data_links.json", "w") as json_file:
+            json_file.write(json_data)
+
+        return json_data
 
 if __name__ == "__main__":
-
     house = ListAmHouseData()
-    # Bnakaranneri Vacharq
-    links_to_parse1 = house.house_data_by_category(60, 250, 3)
-    # Tneri vacharq
-    links_to_parse2 = house.house_data_by_category(62, 167, 3)
-    # Tneri vardzakalutyun
-    links_to_parse3 = house.house_data_by_category(63, 68, 3)
-    # Avtotnakneri ev avtokayanaterxineri vacharq
-    links_to_parse4 = house.house_data_by_category(173, 12, 3)
-    # Vardzov senyakner
-    links_to_parse5 = house.house_data_by_category(212, 6, 3)
-    # Mijocarumneri anckacman vayrer
-    links_to_parse6 = house.house_data_by_category(267, 3, 3)
-    # Tnakneri ev krpakneri vardzakalutyun
-    links_to_parse7 = house.house_data_by_category(58, 2, 3)
-    # Bnakaranneri erkarajamket vardzakalutyun
-    links_to_parse8 = house.house_data_by_category(56, 250, 3)
-    # Komercion ansharj guyqi ev grasenyakneri vardzakalutyun
-    links_to_parse9 = house.house_data_by_category(59, 85, 3)
-    # Komericon ansharj guyqi vacharq
-    links_to_parse10 = house.house_data_by_category(199, 58, 3)
-    # Nor bnakaranneri vacharq
-    links_to_parse11 = house.house_data_by_category(268, 9, 3)
-    # Avtotnakneri ev avtokayanatexineri vardzakalutyun
-    links_to_parse12 = house.house_data_by_category(175, 4, 3)
-    # Oravardzov senyakner
-    links_to_parse13 = house.house_data_by_category(275, 3, 3)
-    # Hoxataracqneri vacharq
-    links_to_parse14 = house.house_data_by_category(55, 175, 3)
-    #Oravardzov bnakaranner
-    links_to_parse15 = house.house_data_by_category(166, 79, 3)
-    #Oravardzov tner
-    links_to_parse16 = house.house_data_by_category(222, 33, 3)
-    #Tnakneri ev krpakneri vacharq
-    links_to_parse17 = house.house_data_by_category(61, 7, 3)
-    #Norakaruyc tneri vacharq
-    links_to_parse18 = house.house_data_by_category(269, 3, 3)
-    #Hoxataracqneri vardzakalutyun
-    links_to_parse19 = house.house_data_by_category(270, 3, 3)
-
-
-
-
+    house.house_data_links_json(5)
