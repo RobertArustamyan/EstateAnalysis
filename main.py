@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 from Functions.get_latitude_longtitude import getting_lat_long
+from Functions.category_dicts import get_dict_for_type
 import json
 import concurrent.futures
 import re
@@ -164,36 +165,79 @@ class ListAmHouseData:
 
         title = soup.find('h1', itemprop='name')
         # Title for data
-        title_content = title.text if title else None
+        TitleContent = title.text if title else None
         # Category for data
-        category_from_data = category
+        if 'new' in category:
+            CategoryTitle = "inprocess"
+        elif category == 'event-venues' or "daily" in category:
+            CategoryTitle = "dailyrent"
+        elif 'sale' in category:
+            CategoryTitle = 'sale'
+        else:
+            CategoryTitle = 'rent'
 
         coordinates = getting_lat_long(link.split("/")[-1])
         #Latitude longitude for data
-        latitude, longitude = coordinates if coordinates else (None, None)
+        Latitude, Longitude = coordinates if coordinates else (None, None)
 
         price = soup.find('span', class_='price x')
-        price_content = int(price['content']) if price else None
+        PriceContent = int(price['content']) if price else None
         price_currency = price.meta['content'] if price and price.meta else None
-        # Price for data
-        if price_content and price_currency == "AMD":
-            price_content = price_content * AMD_TO_USD
+        # Price for data USD
+        if PriceContent and price_currency == "AMD":
+            PriceContent = PriceContent * AMD_TO_USD
 
         # Agency checking
         agency_d = soup.find_all('span',class_='clabel')
-        agency_content = False
+        AgencyContent = False
         if agency_d:
             for agency in agency_d:
                 if agency.text == 'Գործակալություն':
-                    agency_content = True
+                    AgencyContent = True
+
+        # Description
+        desc = soup.find('div',class_='body')
+        DescriptionContent = desc.text if desc else None
 
         attrs = soup.find_all('div',class_='attr g')
+        all_attributes = {}
         for attr in attrs:
             attributes = attr.find_all('div',class_='c')
             for attribute in attributes:
-                print(attribute.find('div',class_='t').text, "--",attribute.find('div',class_='i').text)
+                all_attributes[attribute.find('div',class_='t').text] = attribute.find('div',class_='i').text
+        # Parsing attributes
+        RoomArea,TotalArea,LandArea = (None,None,None)
+        Type = None
+        for item in all_attributes.keys():
+            if item == 'Ընդհանուր մակերես':
+                TotalArea = int(all_attributes[item].split(' ')[0])
+            elif item == 'Սենյակի մակերեսը':
+                RoomArea = int(all_attributes[item].split(' ')[0])
+            elif item == 'Հողատարածքի մակերեսը':
+                LandArea = int(all_attributes[item].split(' ')[0])
+            if item == 'Տեսակ':
+                Type = get_dict_for_type(all_attributes[item])
+
+
+
+        return {
+            'link' : link, # Link of the item
+            'category' : CategoryTitle, # Category(rent,sale,inprocess,dailyrent)
+            'title' : TitleContent, # Title of item
+            'price' : PriceContent, # Price of item in USD
+            'agency' : AgencyContent, # Agency(True,False)
+            'longtitude' : Longitude, # Longtitude of item
+            'latitude' : Latitude, # Latitude of item
+            'roomarea' : RoomArea, # Area of room
+            'totalarea' : TotalArea, # Total area
+            'landarea' : LandArea, # Area of land
+            'type' : Type, # Type for what porpose
+            'atrs' : all_attributes,
+            'description' : DescriptionContent,
+        }
 
 
 if __name__ == "__main__":
     house = ListAmHouseData()
-    print(house.fetch_and_parse_link("https://www.list.am/item/19974658", 'a'))
+    print(house.fetch_and_parse_link("https://www.list.am/item/19942195", "land-rent")['type'])
+
