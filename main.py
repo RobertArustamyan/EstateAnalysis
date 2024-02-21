@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 import time
 from Functions.get_latitude_longtitude import getting_lat_long
 import json
+import concurrent.futures
+import re
+
+AMD_TO_USD = 0.0025
 
 class ListAmHouseData:
     cookies = {
@@ -32,6 +36,9 @@ class ListAmHouseData:
         'upgrade-insecure-requests': '1',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
     }
+
+    def __init__(self):
+        self.session = requests.Session()
 
     def house_data_links_for_parce_by_category(self, category, page_count, time_to_repeat):
         '''
@@ -80,7 +87,7 @@ class ListAmHouseData:
         links_to_parse10 = self.house_data_links_for_parce_by_category(199, 58, time_to_repeat)
         # Nor bnakaranneri vacharq
         links_to_parse11 = self.house_data_links_for_parce_by_category(268, 9, time_to_repeat)
-            # Avtotnakneri ev avtokayanatexineri vardzakalutyun
+        # Avtotnakneri ev avtokayanatexineri vardzakalutyun
         links_to_parse12 = self.house_data_links_for_parce_by_category(175, 4, time_to_repeat)
         # Oravardzov senyakner
         links_to_parse13 = self.house_data_links_for_parce_by_category(275, 3, time_to_repeat)
@@ -124,6 +131,69 @@ class ListAmHouseData:
 
         return json_data
 
+    def parse_link(self):
+        with open("Data/house_data_links.json", "r") as json_file:
+            data = json.load(json_file)
+
+        parsed_data = []
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = []
+            for category, links in data.items():
+                futures.append(executor.submit(self.fetch_and_parse_links, category, links))
+            for future in concurrent.futures.as_completed(futures):
+                parsed_data.extend(future.result())
+        return parsed_data
+
+    def fetch_and_parse_links(self, category, links):
+        parsed_data = []
+        for link in links:
+            parsed_data.append(self.fetch_and_parse_link(link, category))
+        return parsed_data
+
+    def fetch_and_parse_link(self, link, category):
+        '''
+        Parsing data for link
+        :param link: Link of data from list.am
+        :param category: category from house_data_links.json file
+        :return: parsed data sorted by categories
+        '''
+        response = self.session.get(link, headers=self.headers)
+
+        soup = BeautifulSoup(response.text, 'lxml')
+
+        title = soup.find('h1', itemprop='name')
+        # Title for data
+        title_content = title.text if title else None
+        # Category for data
+        category_from_data = category
+
+        coordinates = getting_lat_long(link.split("/")[-1])
+        #Latitude longitude for data
+        latitude, longitude = coordinates if coordinates else (None, None)
+
+        price = soup.find('span', class_='price x')
+        price_content = int(price['content']) if price else None
+        price_currency = price.meta['content'] if price and price.meta else None
+        # Price for data
+        if price_content and price_currency == "AMD":
+            price_content = price_content * AMD_TO_USD
+
+        # Agency checking
+        agency_d = soup.find_all('span',class_='clabel')
+        agency_content = False
+        if agency_d:
+            for agency in agency_d:
+                if agency.text == 'Գործակալություն':
+                    agency_content = True
+
+        attrs = soup.find_all('div',class_='attr g')
+        for attr in attrs:
+            attributes = attr.find_all('div',class_='c')
+            for attribute in attributes:
+                print(attribute.find('div',class_='t').text, "--",attribute.find('div',class_='i').text)
+
+
 if __name__ == "__main__":
     house = ListAmHouseData()
-    house.house_data_links_json(5)
+    print(house.fetch_and_parse_link("https://www.list.am/item/19974658", 'a'))
