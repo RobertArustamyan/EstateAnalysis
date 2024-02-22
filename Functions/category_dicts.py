@@ -1,7 +1,7 @@
 def get_dict_for_type(item):
     '''
     Used in main.py for finding type
-    :param item: name in armenan
+    :param item: name in armenian
     :return: type in english
     '''
     item_dict =  {
@@ -34,4 +34,54 @@ def get_dict_for_type(item):
         'Ավտոտնակ' : 'garage',
         'Ավտոկայանատեղի' : 'parkinglot'
     }
-    return item_dict[item]
+    if item:
+        return item_dict[item]
+    else:
+        return item_dict
+
+
+def get_dict_for_bld_type(item):
+    '''
+        Used in main.py for finding type
+        :param item: name in armenian
+        :return: type in english
+        '''
+    item_dict = {
+        "Քարե" : "stone",
+        "Պանելային" : "panel",
+        "Մոնոլիտ" : "monolith",
+        "Աղյուսե" : "brick",
+        "Կասետային" : "tape",
+        "Փայտե" : "wooden",
+    }
+    if item:
+        return item_dict[item]
+    else:
+        return item_dict
+
+def get_dict_furniture(item):
+    item_dict = {
+        'Առկա է' : 'available',
+        'Առկա չէ' : 'notavailable',
+        'Մասնակի կահույք' : 'partly',
+        'Համաձայնությամբ' : 'agreement'
+    }
+    if item:
+        return item_dict[item]
+    else:
+        return item_dict
+
+def get_dict_repair(item):
+    item_dict = {
+        'Չվերանորոգված': 'unrepaired',
+        'Հին վերանորոգում': 'oldrepair',
+        'Մասնակի վերանորոգում': 'partical',
+        'Կոսմետիկ վերանորոգում': 'cosmetic',
+        'Եվրովերանորոգված': 'euro',
+        'Դիզայներական ոճով վերանորոգված': 'designer-style',
+        'Կապիտալ վերանորոգված': 'capital-reconstructed'
+    }
+    if item:
+        return item_dict[item]
+    else:
+        return item_dict

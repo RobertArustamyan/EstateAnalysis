@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 from Functions.get_latitude_longtitude import getting_lat_long
-from Functions.category_dicts import get_dict_for_type
+from Functions.category_dicts import get_dict_for_type,get_dict_for_bld_type,get_dict_furniture,get_dict_repair
 import json
 import concurrent.futures
 import re
@@ -206,38 +206,85 @@ class ListAmHouseData:
             for attribute in attributes:
                 all_attributes[attribute.find('div',class_='t').text] = attribute.find('div',class_='i').text
         # Parsing attributes
-        RoomArea,TotalArea,LandArea = (None,None,None)
-        Type = None
+        (TotalArea,LandArea,Type,BuildingType,Elevator,FloorCount,
+         RoomCount,BathroomCount,NewBuilded,FurnitureInfo,GarageInfo,
+         RepairInfo) = (None,None,None,None,None,None,None,None,None,None,None,None)
         for item in all_attributes.keys():
             if item == 'Ընդհանուր մակերես':
                 TotalArea = int(all_attributes[item].split(' ')[0])
             elif item == 'Սենյակի մակերեսը':
-                RoomArea = int(all_attributes[item].split(' ')[0])
+                TotalArea = int(all_attributes[item].split(' ')[0])
             elif item == 'Հողատարածքի մակերեսը':
                 LandArea = int(all_attributes[item].split(' ')[0])
-            if item == 'Տեսակ':
+            elif item == 'Տեսակ':
                 Type = get_dict_for_type(all_attributes[item])
-
+            elif item == 'Շինության տիպ':
+                BuildingType = get_dict_for_bld_type(all_attributes[item])
+            elif item == 'Վերելակ':
+                Elevator = True if all_attributes[item] == 'Առկա է' else False
+            elif item == 'Հարկերի քանակ':
+                if '+' in all_attributes[item]:
+                    FloorCount = int(all_attributes[item].split("+")[0])
+                else:
+                    FloorCount = int(all_attributes[item])
+            elif item == 'Սենյակների քանակ':
+                if '+' in all_attributes[item]:
+                    RoomCount = int(all_attributes[item].split("+")[0])
+                else:
+                    RoomCount = int(all_attributes[item])
+            elif item == 'Սանհանգույցների քանակ':
+                if int(all_attributes[item]) == 1:
+                    BathroomCount = 1
+                elif int(all_attributes[item]) == 2:
+                    BathroomCount = 2
+                else:
+                    BathroomCount = 3
+            elif item == 'Նորակառույց':
+                if all_attributes[item] == 'Այո':
+                    NewBuilded = True
+                else:
+                    NewBuilded = False
+            elif item == 'Կահույք':
+                FurnitureInfo = get_dict_furniture(all_attributes[item])
+            elif item == 'Ավտոտնակ':
+                if all_attributes[item] == '1 տեղ':
+                    GarageInfo = 1
+                elif all_attributes[item] == '2 տեղ':
+                    GarageInfo = 2
+                elif all_attributes[item] == 'Առկա չէ':
+                    GarageInfo = None
+                else:
+                    GarageInfo = 3
+            elif item == 'Վերանորոգում':
+                RepairInfo = get_dict_repair(all_attributes[item])
 
 
         return {
             'link' : link, # Link of the item
             'category' : CategoryTitle, # Category(rent,sale,inprocess,dailyrent)
+            'category_from_list' : category, # Category from house_data_links.json
             'title' : TitleContent, # Title of item
             'price' : PriceContent, # Price of item in USD
             'agency' : AgencyContent, # Agency(True,False)
             'longtitude' : Longitude, # Longtitude of item
             'latitude' : Latitude, # Latitude of item
-            'roomarea' : RoomArea, # Area of room
-            'totalarea' : TotalArea, # Total area
+            'area' : TotalArea, # Total area
             'landarea' : LandArea, # Area of land
             'type' : Type, # Type for what porpose
-            'atrs' : all_attributes,
-            'description' : DescriptionContent,
+            'buildingtype' : BuildingType, # Type of building
+            'elevator' : Elevator, # (True, False, None)
+            'floorcount' : FloorCount, # Number of floors
+            'roomcount' : RoomCount, # Number of rooms
+            'bathroomcount' : BathroomCount, # Number of bathrooms
+            'newbuilded' : NewBuilded, # Is building newbuilded or no
+            'furniture' : FurnitureInfo, # Info about furniture
+            'garagecount' : GarageInfo, # Info about Garage count
+            'repairinfo' : RepairInfo,
+            #'atrs' : all_attributes,
+            'description' : DescriptionContent, # Description added by user
         }
 
 
 if __name__ == "__main__":
     house = ListAmHouseData()
-    print(house.fetch_and_parse_link("https://www.list.am/item/19942195", "land-rent")['type'])
-
+    print(house.fetch_and_parse_link("https://www.list.am/item/19848359", "land-rent")['repairinfo'])
