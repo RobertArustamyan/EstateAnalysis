@@ -85,3 +85,18 @@ def get_dict_repair(item):
         return item_dict[item]
     else:
         return item_dict
+
+def get_guest_count(item):
+    item_dict = {
+        'մինչև 15 անձ' : '<15',
+        '15-ից 30 անձ' : '15-30',
+        '30-ից 50 անձ' : '30-50',
+        '50-ից 100 անձ' : '50-100',
+        '100-ից 300 անձ' : '100-300',
+        '300-ից 500 անձ': '300-500',
+        '500 և ավելի անձ' : '500>'
+    }
+    if item:
+        return item_dict[item]
+    else:
+        return item_dict

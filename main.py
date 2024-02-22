@@ -2,12 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 import time
 from Functions.get_latitude_longtitude import getting_lat_long
-from Functions.category_dicts import get_dict_for_type,get_dict_for_bld_type,get_dict_furniture,get_dict_repair
+from Functions.category_dicts import get_dict_for_type, get_dict_for_bld_type, get_dict_furniture, get_dict_repair, \
+    get_guest_count
 import json
 import concurrent.futures
 import re
+import pprint
 
 AMD_TO_USD = 0.0025
+
 
 class ListAmHouseData:
     cookies = {
@@ -177,7 +180,7 @@ class ListAmHouseData:
             CategoryTitle = 'rent'
 
         coordinates = getting_lat_long(link.split("/")[-1])
-        #Latitude longitude for data
+        # Latitude longitude for data
         Latitude, Longitude = coordinates if coordinates else (None, None)
 
         price = soup.find('span', class_='price x')
@@ -188,7 +191,7 @@ class ListAmHouseData:
             PriceContent = PriceContent * AMD_TO_USD
 
         # Agency checking
-        agency_d = soup.find_all('span',class_='clabel')
+        agency_d = soup.find_all('span', class_='clabel')
         AgencyContent = False
         if agency_d:
             for agency in agency_d:
@@ -196,19 +199,21 @@ class ListAmHouseData:
                     AgencyContent = True
 
         # Description
-        desc = soup.find('div',class_='body')
+        desc = soup.find('div', class_='body')
         DescriptionContent = desc.text if desc else None
 
-        attrs = soup.find_all('div',class_='attr g')
+        attrs = soup.find_all('div', class_='attr g')
         all_attributes = {}
         for attr in attrs:
-            attributes = attr.find_all('div',class_='c')
+            attributes = attr.find_all('div', class_='c')
             for attribute in attributes:
-                all_attributes[attribute.find('div',class_='t').text] = attribute.find('div',class_='i').text
+                all_attributes[attribute.find('div', class_='t').text] = attribute.find('div', class_='i').text
         # Parsing attributes
-        (TotalArea,LandArea,Type,BuildingType,Elevator,FloorCount,
-         RoomCount,BathroomCount,NewBuilded,FurnitureInfo,GarageInfo,
-         RepairInfo) = (None,None,None,None,None,None,None,None,None,None,None,None)
+        (TotalArea, LandArea, Type, BuildingType, Elevator, FloorCount,
+         RoomCount, BathroomCount, NewBuilded, FurnitureInfo, GarageInfo,
+         RepairInfo, BalconyInfo, Floor, LocFromStreet, ExteriorDecoration,
+         GuestCount) = (None, None, None, None, None, None, None, None, None, None, None,
+                        None, None, None, None, None, None)
         for item in all_attributes.keys():
             if item == 'Ընդհանուր մակերես':
                 TotalArea = int(all_attributes[item].split(' ')[0])
@@ -258,33 +263,61 @@ class ListAmHouseData:
             elif item == 'Վերանորոգում':
                 RepairInfo = get_dict_repair(all_attributes[item])
 
+            elif item == 'Պատշգամբ':
+                if all_attributes[item] == 'Բաց պատշգամբ':
+                    BalconyInfo = 'open'
+                elif all_attributes[item] == 'Փակ պատշգամբ':
+                    BalconyInfo = 'close'
+                else:
+                    BalconyInfo = 'notavailable'
+            elif item == 'Հարկ':
+                if "+" in all_attributes[item]:
+                    Floor = int(all_attributes[item].split("+")[0])
+                else:
+                    Floor = int(all_attributes[item])
+            elif item == 'Գտնվելու վայրը փողոցից':
+                if all_attributes[item] == 'Առաջին գիծ':
+                    LocFromStreet = 1
+                elif all_attributes[item] == 'Երկրորդ գիծ':
+                    LocFromStreet = 2
+            elif item == 'Արտաքին հարդարում':
+                if all_attributes[item] == 'Մետաղ':
+                    ExteriorDecoration = 'metal'
+                elif all_attributes[item] == 'Փայտ':
+                    ExteriorDecoration = 'wood'
+            elif item == 'Հյուրերի քանակ':
+                GuestCount = get_guest_count(all_attributes[item])
+
+        # Checkbox Parsing
+
 
         return {
-            'link' : link, # Link of the item
-            'category' : CategoryTitle, # Category(rent,sale,inprocess,dailyrent)
-            'category_from_list' : category, # Category from house_data_links.json
-            'title' : TitleContent, # Title of item
-            'price' : PriceContent, # Price of item in USD
-            'agency' : AgencyContent, # Agency(True,False)
-            'longtitude' : Longitude, # Longtitude of item
-            'latitude' : Latitude, # Latitude of item
-            'area' : TotalArea, # Total area
-            'landarea' : LandArea, # Area of land
-            'type' : Type, # Type for what porpose
-            'buildingtype' : BuildingType, # Type of building
-            'elevator' : Elevator, # (True, False, None)
-            'floorcount' : FloorCount, # Number of floors
-            'roomcount' : RoomCount, # Number of rooms
-            'bathroomcount' : BathroomCount, # Number of bathrooms
-            'newbuilded' : NewBuilded, # Is building newbuilded or no
-            'furniture' : FurnitureInfo, # Info about furniture
-            'garagecount' : GarageInfo, # Info about Garage count
-            'repairinfo' : RepairInfo,
-            #'atrs' : all_attributes,
-            'description' : DescriptionContent, # Description added by user
+            'link': link,  # Link of the item
+            'category': CategoryTitle,  # Category(rent,sale,inprocess,dailyrent)
+            'category_from_list': category,  # Category from house_data_links.json
+            'title': TitleContent,  # Title of item
+            'price': PriceContent,  # Price of item in USD
+            'agency': AgencyContent,  # Agency(True,False)
+            'longtitude': Longitude,  # Longtitude of item
+            'latitude': Latitude,  # Latitude of item
+            'area': TotalArea,  # Total area
+            'landarea': LandArea,  # Area of land
+            'purpose': Type,  # Type for what porpose
+            'buildingtype': BuildingType,  # Type of building
+            'elevator': Elevator,  # (True, False, None)
+            'floorcount': FloorCount,  # Number of floors
+            'roomcount': RoomCount,  # Number of rooms
+            'bathroomcount': BathroomCount,  # Number of bathrooms
+            'newbuilded': NewBuilded,  # Is building newbuilded or no
+            'furniture': FurnitureInfo,  # Info about furniture
+            'garagecount': GarageInfo,  # Info about Garage count
+            'repairstatus': RepairInfo,  # Info about repair status of item
+            'balcony': BalconyInfo,  # Info about balcony (Open,closed,none,noaviailable)
+            'guests' : GuestCount, # Number of guests per location
+            'description': DescriptionContent,  # Description added by user
         }
 
 
 if __name__ == "__main__":
     house = ListAmHouseData()
-    print(house.fetch_and_parse_link("https://www.list.am/item/19848359", "land-rent")['repairinfo'])
+    pprint.pprint(house.fetch_and_parse_link("https://www.list.am/item/20581074", "land-rent"))
