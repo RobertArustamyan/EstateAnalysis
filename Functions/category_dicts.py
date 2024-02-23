@@ -100,3 +100,53 @@ def get_guest_count(item):
         return item_dict[item]
     else:
         return item_dict
+
+def get_house_has_dict(items):
+    item_dict = {
+        'հեռուստացույց' : 'tv',
+        'օդորակիչ' : 'conditioner',
+        'ինտերնետ' : 'wi-fi',
+        'կայանատեղի' : 'parking-lot',
+        'սառնարան' : 'refrigerator',
+        'սալօջախ' : 'stove',
+        'աման լվացող մեքենա' : 'dishwasher',
+        'լվացքի մեքենա' : 'washing-machine',
+        'ջրատաքացուցիչ' : 'water-heater',
+        'լողավազան' : 'swimming-pool',
+        'սաունա' : 'sauna',
+        'բուխարի' : 'fireplace',
+        'խորովածի վառարան' : 'barbecue-oven',
+        'բիլիարդ' : 'billiard',
+        'տաղավար' : 'pavilion',
+        'անվտանգության համակարգ' : 'security-system',
+        'էլեկտրականություն' : 'electricity',
+        'ջուր' : 'water',
+        'ջեռուցում' : 'warming',
+        'էլեկտրական մեքենաների լիցքավորիչ' : 'car-charger',
+        'ավտոմատ դարպասներ' : 'automatic-gates',
+        'տեսահսկում' : 'video-security',
+        'սրբիչներ' : 'towels',
+        'անկողնային պարագաներ' : 'bedding',
+        'հիգիենայի պարագաներ' : 'hygiene-items',
+        'խոհանոց': 'kitchen',
+        'բար': 'bar',
+        'բեմ': 'stage',
+        'պարահրապարակ': 'dance-floor',
+        'աուդիո համակարգ': 'audio-system',
+        'կարաոկե': 'karaoke',
+        'պրոյեկտոր': 'projector',
+        'խաղային ավտոմատներ': 'gaming-machines',
+        'սեղանի խաղեր': 'board-games',
+        'էլեկտրականություն': 'electricity',
+        'ջրամատակարարում': 'water-supply',
+        'գազ': 'gas',
+        'կոյուղի': 'sewerage'
+    }
+    if items:
+        res = []
+        for item in items:
+            it = item.lower().strip()
+            if it in item_dict.keys():
+                res.append(item_dict[it])
+        return res
+    return item_dict

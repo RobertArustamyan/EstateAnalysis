@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import time
 from Functions.get_latitude_longtitude import getting_lat_long
 from Functions.category_dicts import get_dict_for_type, get_dict_for_bld_type, get_dict_furniture, get_dict_repair, \
-    get_guest_count
+    get_guest_count, get_house_has_dict
 import json
 import concurrent.futures
 import re
@@ -169,6 +169,9 @@ class ListAmHouseData:
         title = soup.find('h1', itemprop='name')
         # Title for data
         TitleContent = title.text if title else None
+        # Address of data
+        AddressDiv = soup.find('div', class_='loc')
+        AddressContent = AddressDiv.find('a').text if AddressDiv.find('a') else None
         # Category for data
         if 'new' in category:
             CategoryTitle = "inprocess"
@@ -214,6 +217,11 @@ class ListAmHouseData:
          RepairInfo, BalconyInfo, Floor, LocFromStreet, ExteriorDecoration,
          GuestCount) = (None, None, None, None, None, None, None, None, None, None, None,
                         None, None, None, None, None, None)
+
+        (playground, doorman, domophone, covered_parking, othdoor_parkin, garage_tf) = (
+        False, False, False, False, False, False)
+        # Things that house has
+        HouseHas = []
         for item in all_attributes.keys():
             if item == 'Ընդհանուր մակերես':
                 TotalArea = int(all_attributes[item].split(' ')[0])
@@ -288,14 +296,31 @@ class ListAmHouseData:
             elif item == 'Հյուրերի քանակ':
                 GuestCount = get_guest_count(all_attributes[item])
 
-        # Checkbox Parsing
-
+            # Checkbox Parsing
+            elif item == 'Առկա են':
+                if 'Դոմոֆոն' in all_attributes[item]:
+                    domophone = True
+                if 'Դռնապահ' in all_attributes[item]:
+                    doorman = True
+                if 'Խաղահրապարակ' in all_attributes[item]:
+                    playground = True
+            elif item == 'Կայանատեղի':
+                if 'Բացօթյա կայանատեղի' in all_attributes[item]:
+                    othdoor_parkin = True
+                if 'Ծածկապատ կայանատեղի' in all_attributes[item]:
+                    covered_parking = True
+                if 'Ավտոտնակ' in all_attributes[item]:
+                    garage_tf = True
+            elif item == 'Հարմարություններ' or item == 'Կենցաղային տեխնիկա' or item == 'Կոմունալ ծառայություններ' or item == 'Կոմֆորտ' \
+                    or item == 'Սարքավորումներ' or item == 'Կոմունիկացիաներ':
+                HouseHas.extend(get_house_has_dict(all_attributes[item].split(',')))
 
         return {
             'link': link,  # Link of the item
             'category': CategoryTitle,  # Category(rent,sale,inprocess,dailyrent)
             'category_from_list': category,  # Category from house_data_links.json
             'title': TitleContent,  # Title of item
+            'address': AddressContent,  # Address of item
             'price': PriceContent,  # Price of item in USD
             'agency': AgencyContent,  # Agency(True,False)
             'longtitude': Longitude,  # Longtitude of item
@@ -313,11 +338,18 @@ class ListAmHouseData:
             'garagecount': GarageInfo,  # Info about Garage count
             'repairstatus': RepairInfo,  # Info about repair status of item
             'balcony': BalconyInfo,  # Info about balcony (Open,closed,none,noaviailable)
-            'guests' : GuestCount, # Number of guests per location
+            'guests': GuestCount,  # Number of guests per location
+            'domophone': domophone,  # (T/F)
+            'doorman': doorman,  # (T/F)
+            'playground': playground,  # (T/F)
+            'coveredparking': covered_parking,  # (T/F)
+            'outdoorparking': othdoor_parkin,  # (T/F)
+            'garage_tr_fl': garage_tf,  # (T/F)
+            'househas': HouseHas,  # List of items that house has
             'description': DescriptionContent,  # Description added by user
         }
 
 
 if __name__ == "__main__":
     house = ListAmHouseData()
-    pprint.pprint(house.fetch_and_parse_link("https://www.list.am/item/20581074", "land-rent"))
+    pprint.pprint(house.fetch_and_parse_link("https://www.list.am/item/19630058", "land-rent")['househas'])
