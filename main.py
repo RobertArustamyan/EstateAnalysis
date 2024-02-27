@@ -8,6 +8,11 @@ import json
 import concurrent.futures
 import re
 import pprint
+import csv
+import urllib3
+from datetime import datetime
+
+urllib3.disable_warnings()
 
 AMD_TO_USD = 0.0025
 
@@ -16,26 +21,31 @@ class ListAmHouseData:
     cookies = {
         '__stripe_mid': 'b455a402-4c15-473b-80ff-0770047fe1bcdcc265',
         '_gid': 'GA1.2.1698014694.1708345634',
-        '__stripe_sid': 'ae480c2d-5f8e-4556-a616-1d3fb2870f249dd314',
         'lang': '2',
+        'cf_clearance': '9X6JiPKl.yFNVTWUWgdCucvKtN5D7Sy7Y3AR60.q7E8-1708423596-1.0-Aeu/0z7RgiE0w2rU4gkoXo+bIEbQdMmmrochC79oIVEntG0h45OgggSU725iScQHUvV1fEDG7QuF57B7xvcN9Xk=',
+        'u': '00076wz6388a79dd0207594ecfffc01a3ab2606654bcf888411cdbf',
         '_gat': '1',
-        '_ga_KVLP4BC4K8': 'GS1.1.1708368084.4.1.1708370706.0.0.0',
-        '_ga': 'GA1.2.1736374402.1708001971',
+        '_ga_KVLP4BC4K8': 'GS1.1.1708701844.15.1.1708701929.0.0.0',
+        '_ga': 'GA1.1.1736374402.1708001971',
     }
 
     headers = {
         'authority': 'www.list.am',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
         'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-        'cache-control': 'max-age=0',
-        # 'cookie': '__stripe_mid=b455a402-4c15-473b-80ff-0770047fe1bcdcc265; _gid=GA1.2.1698014694.1708345634; __stripe_sid=ae480c2d-5f8e-4556-a616-1d3fb2870f249dd314; lang=2; _gat=1; _ga_KVLP4BC4K8=GS1.1.1708368084.4.1.1708370706.0.0.0; _ga=GA1.2.1736374402.1708001971',
-        'referer': 'https://www.list.am/category/54',
+        # 'cookie': '__stripe_mid=b455a402-4c15-473b-80ff-0770047fe1bcdcc265; _gid=GA1.2.1698014694.1708345634; lang=2; cf_clearance=9X6JiPKl.yFNVTWUWgdCucvKtN5D7Sy7Y3AR60.q7E8-1708423596-1.0-Aeu/0z7RgiE0w2rU4gkoXo+bIEbQdMmmrochC79oIVEntG0h45OgggSU725iScQHUvV1fEDG7QuF57B7xvcN9Xk=; u=00076wz6388a79dd0207594ecfffc01a3ab2606654bcf888411cdbf; _gat=1; _ga_KVLP4BC4K8=GS1.1.1708701844.15.1.1708701929.0.0.0; _ga=GA1.1.1736374402.1708001971',
         'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+        'sec-ch-ua-arch': '"x86"',
+        'sec-ch-ua-bitness': '"64"',
+        'sec-ch-ua-full-version': '"121.0.6167.187"',
+        'sec-ch-ua-full-version-list': '"Not A(Brand";v="99.0.0.0", "Google Chrome";v="121.0.6167.187", "Chromium";v="121.0.6167.187"',
         'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-model': '""',
         'sec-ch-ua-platform': '"Windows"',
+        'sec-ch-ua-platform-version': '"10.0.0"',
         'sec-fetch-dest': 'document',
         'sec-fetch-mode': 'navigate',
-        'sec-fetch-site': 'same-origin',
+        'sec-fetch-site': 'none',
         'sec-fetch-user': '?1',
         'upgrade-insecure-requests': '1',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
@@ -58,7 +68,7 @@ class ListAmHouseData:
             i = 1
             while i <= page_count:
                 response = requests.get(f'https://www.list.am/category/{category}/{i}', cookies=self.cookies,
-                                        headers=self.headers)
+                                        headers=self.headers,verify=False,timeout=5)
                 soup = BeautifulSoup(response.text, features="lxml")
                 links = soup.find_all('a')
                 print(f"{category} - {i}")
@@ -70,84 +80,80 @@ class ListAmHouseData:
         return links_to_parse
 
     def house_data_links_json(self, time_to_repeat):
-        links_to_parse1 = self.house_data_links_for_parce_by_category(60, 250, time_to_repeat)
-        # Tneri vacharq
-        links_to_parse2 = self.house_data_links_for_parce_by_category(62, 167, time_to_repeat)
-        # Tneri vardzakalutyun
-        links_to_parse3 = self.house_data_links_for_parce_by_category(63, 68, time_to_repeat)
-        # Avtotnakneri ev avtokayanaterxineri vacharq
-        links_to_parse4 = self.house_data_links_for_parce_by_category(173, 12, time_to_repeat)
-        # Vardzov senyakner
-        links_to_parse5 = self.house_data_links_for_parce_by_category(212, 6, time_to_repeat)
-        # Mijocarumneri anckacman vayrer
-        links_to_parse6 = self.house_data_links_for_parce_by_category(267, 3, time_to_repeat)
-        # Tnakneri ev krpakneri vardzakalutyun
-        links_to_parse7 = self.house_data_links_for_parce_by_category(58, 2, time_to_repeat)
-        # Bnakaranneri erkarajamket vardzakalutyun
-        links_to_parse8 = self.house_data_links_for_parce_by_category(56, 250, time_to_repeat)
-        # Komercion ansharj guyqi ev grasenyakneri vardzakalutyun
-        links_to_parse9 = self.house_data_links_for_parce_by_category(59, 85, time_to_repeat)
-        # Komericon ansharj guyqi vacharq
-        links_to_parse10 = self.house_data_links_for_parce_by_category(199, 58, time_to_repeat)
-        # Nor bnakaranneri vacharq
-        links_to_parse11 = self.house_data_links_for_parce_by_category(268, 9, time_to_repeat)
-        # Avtotnakneri ev avtokayanatexineri vardzakalutyun
-        links_to_parse12 = self.house_data_links_for_parce_by_category(175, 4, time_to_repeat)
-        # Oravardzov senyakner
-        links_to_parse13 = self.house_data_links_for_parce_by_category(275, 3, time_to_repeat)
-        # Hoxataracqneri vacharq
-        links_to_parse14 = self.house_data_links_for_parce_by_category(55, 175, time_to_repeat)
-        # Oravardzov bnakaranner
-        links_to_parse15 = self.house_data_links_for_parce_by_category(166, 79, time_to_repeat)
-        # Oravardzov tner
-        links_to_parse16 = self.house_data_links_for_parce_by_category(222, 33, time_to_repeat)
-        # Tnakneri ev krpakneri vacharq
-        links_to_parse17 = self.house_data_links_for_parce_by_category(61, 7, time_to_repeat)
-        # Norakaruyc tneri vacharq
-        links_to_parse18 = self.house_data_links_for_parce_by_category(269, 3, time_to_repeat)
-        # Hoxataracqneri vardzakalutyun
-        links_to_parse19 = self.house_data_links_for_parce_by_category(270, 3, time_to_repeat)
-
-        data = {
-            "apartments-sale": list(set(links_to_parse1)),
-            "houses-sale": list(set(links_to_parse2)),
-            "houses-rent": list(set(links_to_parse3)),
-            "garages-parking-slots-sale": list(set(links_to_parse4)),
-            "rooms-rent": list(set(links_to_parse5)),
-            "event-venues": list(set(links_to_parse6)),
-            "tnak-krpak-rent": list(set(links_to_parse7)),
-            "apartments-rent-long_term": list(set(links_to_parse8)),
-            "commercial-estate-offices-rent": list(set(links_to_parse9)),
-            "commercial-estate-sale": list(set(links_to_parse10)),
-            "new-apartments-sale": list(set(links_to_parse11)),
-            "garages-parking-slots-rent": list(set(links_to_parse12)),
-            "rooms-daily-rent": list(set(links_to_parse13)),
-            "land-sale": list(set(links_to_parse14)),
-            "daily-apartments-rent": list(set(links_to_parse15)),
-            "daily-house-rent": list(set(links_to_parse16)),
-            "tnak-krpak-sale": list(set(links_to_parse17)),
-            "new-houses-sale": list(set(links_to_parse18)),
-            "land-rent": list(set(links_to_parse19))
+        category_names = {
+            60: "apartments-sale",
+            62: "houses-sale",
+            63: "houses-rent",
+            173: "garages-parking-slots-sale",
+            212: "rooms-rent",
+            267: "event-venues",
+            58: "tnak-krpak-rent",
+            56: "apartments-long_term-rent",
+            59: "commercial-estate-offices-rent",
+            199: "commercial-estate-sale",
+            268: "new-apartments-sale",
+            175: "garages-parking-slots-rent",
+            275: "rooms-daily-rent",
+            55: "land-sale",
+            166: "daily-apartments-rent",
+            222: "daily-house-rent",
+            61: "tnak-krpak-sale",
+            269: "new-houses-sale",
+            270: "land-rent"
         }
+
+        # Define a function to fetch links for a given category
+        def fetch_links(category, page_count):
+            return self.house_data_links_for_parce_by_category(category, page_count, time_to_repeat)
+
+        # List of categories and page counts
+        categories = [
+            (60, 250), (62, 167), (63, 68), (173, 12), (212, 6),
+            (267, 3), (58, 2), (56, 250), (59, 85), (199, 58),
+            (268, 9), (175, 4), (275, 3), (55, 175), (166, 79),
+            (222, 33), (61, 7), (269, 3), (270, 3)
+        ]
+
+        # Dictionary to hold the results
+        data = {}
+
+        # Execute the function concurrently for each category
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = {executor.submit(fetch_links, category, page_count): category for category, page_count in categories}
+            for future in concurrent.futures.as_completed(futures):
+                category_id = futures[future]
+                category_name = category_names[category_id]
+                links = future.result()
+                data[category_name] = list(set(links))
+
+        # Write data to JSON file
         json_data = json.dumps(data, indent=4)
         with open("Data/house_data_links.json", "w") as json_file:
             json_file.write(json_data)
 
         return json_data
 
-    def parse_link(self):
+    def parse_link(self, category_to_parse):
         with open("Data/house_data_links.json", "r") as json_file:
             data = json.load(json_file)
 
         parsed_data = []
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = []
-            for category, links in data.items():
-                futures.append(executor.submit(self.fetch_and_parse_links, category, links))
+            futures = [executor.submit(self.fetch_and_parse_links, category_to_parse, data[category_to_parse])]
             for future in concurrent.futures.as_completed(futures):
                 parsed_data.extend(future.result())
-        return parsed_data
+        csv_filename = f"Data/{category_to_parse}.csv"
+
+        print(f"Finished to parse {category_to_parse} at {datetime.now()}")
+        print(f"STARTED making A File {datetime.now()}")
+
+        with open(csv_filename, 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=parsed_data[0].keys())
+            writer.writeheader()
+            writer.writerows(parsed_data)
+
+        return csv_filename
 
     def fetch_and_parse_links(self, category, links):
         parsed_data = []
@@ -171,7 +177,7 @@ class ListAmHouseData:
         TitleContent = title.text if title else None
         # Address of data
         AddressDiv = soup.find('div', class_='loc')
-        AddressContent = AddressDiv.find('a').text if AddressDiv.find('a') else None
+        AddressContent = AddressDiv.find('a').text if AddressDiv and AddressDiv.find('a') else None
         # Category for data
         if 'new' in category:
             CategoryTitle = "inprocess"
@@ -215,20 +221,21 @@ class ListAmHouseData:
         (TotalArea, LandArea, Type, BuildingType, Elevator, FloorCount,
          RoomCount, BathroomCount, NewBuilded, FurnitureInfo, GarageInfo,
          RepairInfo, BalconyInfo, Floor, LocFromStreet, ExteriorDecoration,
-         GuestCount) = (None, None, None, None, None, None, None, None, None, None, None,
-                        None, None, None, None, None, None)
+         GuestCount, ChilderInfo, AnimalInfo, EveningNoise, UtilityPayments, PrePayment) = (
+            None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+            None, None, None, None, None, None, None)
 
         (playground, doorman, domophone, covered_parking, othdoor_parkin, garage_tf) = (
-        False, False, False, False, False, False)
+            False, False, False, False, False, False)
         # Things that house has
         HouseHas = []
         for item in all_attributes.keys():
             if item == 'Ընդհանուր մակերես':
-                TotalArea = int(all_attributes[item].split(' ')[0])
+                TotalArea = int(all_attributes[item].replace(',', '').split(' ')[0])
             elif item == 'Սենյակի մակերեսը':
-                TotalArea = int(all_attributes[item].split(' ')[0])
+                TotalArea = int(all_attributes[item].replace(',', '').split(' ')[0])
             elif item == 'Հողատարածքի մակերեսը':
-                LandArea = int(all_attributes[item].split(' ')[0])
+                LandArea = int(all_attributes[item].replace(',', '').split(' ')[0])
             elif item == 'Տեսակ':
                 Type = get_dict_for_type(all_attributes[item])
             elif item == 'Շինության տիպ':
@@ -246,9 +253,9 @@ class ListAmHouseData:
                 else:
                     RoomCount = int(all_attributes[item])
             elif item == 'Սանհանգույցների քանակ':
-                if int(all_attributes[item]) == 1:
+                if isinstance(all_attributes[item], int) and int(all_attributes[item]) == 1:
                     BathroomCount = 1
-                elif int(all_attributes[item]) == 2:
+                elif isinstance(all_attributes[item], int) and int(all_attributes[item]) == 2:
                     BathroomCount = 2
                 else:
                     BathroomCount = 3
@@ -315,6 +322,38 @@ class ListAmHouseData:
                     or item == 'Սարքավորումներ' or item == 'Կոմունիկացիաներ':
                 HouseHas.extend(get_house_has_dict(all_attributes[item].split(',')))
 
+            elif item == 'Կարելի է երեխաների հետ':
+                if all_attributes[item] == 'Այո':
+                    ChilderInfo = 'allowed'
+                elif all_attributes[item] == 'Ոչ':
+                    ChilderInfo = 'notallowed'
+                else:
+                    ChilderInfo = 'agreement'
+            elif item == 'Թույլատրվում են ընտանի կենդանիներ':
+                if all_attributes[item] == 'Այո':
+                    AnimalInfo = 'allowed'
+                elif all_attributes[item] == 'Ոչ':
+                    AnimalInfo = 'notallowed'
+                else:
+                    AnimalInfo = 'agreement'
+            elif item == 'Երեկոյան հնարավոր է աղմկել':
+                if all_attributes[item] == 'Այո':
+                    EveningNoise = 'allowed'
+                else:
+                    EveningNoise = 'notallowed'
+            elif item == 'Կոմունալ վճարումներ':
+                if all_attributes[item] == 'Ներառված':
+                    UtilityPayments = 'included'
+                elif all_attributes[item] == 'Չներառված':
+                    UtilityPayments = 'notincluded'
+                else:
+                    UtilityPayments = 'agreeement'
+            elif item == 'Կանխավճար':
+                if all_attributes[item] == 'Առանց կանխավճարի':
+                    PrePayment = False
+                else:
+                    PrePayment = True
+        print('done')
         return {
             'link': link,  # Link of the item
             'category': CategoryTitle,  # Category(rent,sale,inprocess,dailyrent)
@@ -346,10 +385,28 @@ class ListAmHouseData:
             'outdoorparking': othdoor_parkin,  # (T/F)
             'garage_tr_fl': garage_tf,  # (T/F)
             'househas': HouseHas,  # List of items that house has
+            'childer': ChilderInfo,  # (Allowed,NotAllowed,ByAgreement)
+            'animal': AnimalInfo,  # (Allowed,NotAllowed,ByAgreement)
+            'utilitypayment': UtilityPayments,  # Info about Utility Payments
+            'prepayment' : PrePayment, # Info about pre payment
             'description': DescriptionContent,  # Description added by user
         }
 
 
 if __name__ == "__main__":
     house = ListAmHouseData()
-    pprint.pprint(house.fetch_and_parse_link("https://www.list.am/item/19630058", "land-rent")['househas'])
+    #pprint.pprint(house.fetch_and_parse_link("https://www.list.am/item/19630058", "land-rent"))
+    #house.parse_link()
+#     categories_to_parse = ["apartments-sale","houses-sale","houses-rent","garages-parking-slots-sale","rooms-rent","event-venues","tnak-krpak-rent","apartments-long_term-rent","commercial-estate-offices-rent","commercial-estate-sale",
+# "new-apartments-sale","garages-parking-slots-rent","rooms-daily-rent","land-sale","daily-apartments-rent","daily-house-rent","tnak-krpak-sale","new-houses-sale","land-rent"]
+#     for categorie in categories_to_parse:
+#         print(f"Started to parse {categorie} in {datetime.now()}")
+#         house.parse_link(categorie)
+#         print(f"Finished to making a file in {datetime.now()}")
+
+    #"apartments-sale","houses-sale","houses-rent",,"rooms-rent","event-venues","tnak-krpak-rent","apartments-long_term-rent","commercial-estate-offices-rent","commercial-estate-sale",
+# ,,"daily-apartments-rent",,"tnak-krpak-sale",
+    category = "tnak-krpak-sale"
+    print(f"Started to parse {category} in {datetime.now()}")
+    house.parse_link(category)
+    print(f"Finished to making a file in {datetime.now()}")
