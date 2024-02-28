@@ -145,9 +145,6 @@ class ListAmHouseData:
                 parsed_data.extend(future.result())
         csv_filename = f"Data/{category_to_parse}.csv"
 
-        print(f"Finished to parse {category_to_parse} at {datetime.now()}")
-        print(f"STARTED making A File {datetime.now()}")
-
         with open(csv_filename, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=parsed_data[0].keys())
             writer.writeheader()
@@ -353,7 +350,6 @@ class ListAmHouseData:
                     PrePayment = False
                 else:
                     PrePayment = True
-        print('done')
         return {
             'link': link,  # Link of the item
             'category': CategoryTitle,  # Category(rent,sale,inprocess,dailyrent)
@@ -406,7 +402,3 @@ if __name__ == "__main__":
 
     #"apartments-sale","houses-sale","houses-rent",,"rooms-rent","event-venues","tnak-krpak-rent","apartments-long_term-rent","commercial-estate-offices-rent","commercial-estate-sale",
 # ,,"daily-apartments-rent",,"tnak-krpak-sale",
-    category = "tnak-krpak-sale"
-    print(f"Started to parse {category} in {datetime.now()}")
-    house.parse_link(category)
-    print(f"Finished to making a file in {datetime.now()}")
