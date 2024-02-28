@@ -34,7 +34,7 @@ def get_dict_for_type(item):
         'Ավտոտնակ' : 'garage',
         'Ավտոկայանատեղի' : 'parkinglot'
     }
-    if item:
+    if item and item in item_dict.keys():
         return item_dict[item]
     else:
         return item_dict
@@ -54,7 +54,7 @@ def get_dict_for_bld_type(item):
         "Կասետային" : "tape",
         "Փայտե" : "wooden",
     }
-    if item:
+    if item and item in item_dict.keys():
         return item_dict[item]
     else:
         return item_dict
@@ -66,7 +66,7 @@ def get_dict_furniture(item):
         'Մասնակի կահույք' : 'partly',
         'Համաձայնությամբ' : 'agreement'
     }
-    if item:
+    if item and item in item_dict.keys():
         return item_dict[item]
     else:
         return item_dict
@@ -81,7 +81,7 @@ def get_dict_repair(item):
         'Դիզայներական ոճով վերանորոգված': 'designer-style',
         'Կապիտալ վերանորոգված': 'capital-reconstructed'
     }
-    if item:
+    if item and item in item_dict.keys():
         return item_dict[item]
     else:
         return item_dict
@@ -96,7 +96,7 @@ def get_guest_count(item):
         '300-ից 500 անձ': '300-500',
         '500 և ավելի անձ' : '500>'
     }
-    if item:
+    if item and item in item_dict.keys():
         return item_dict[item]
     else:
         return item_dict

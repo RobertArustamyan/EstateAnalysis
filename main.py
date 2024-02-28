@@ -11,11 +11,39 @@ import pprint
 import csv
 import urllib3
 from datetime import datetime
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import NoSuchElementException
+from fake_useragent import UserAgent
 
 urllib3.disable_warnings()
 
 AMD_TO_USD = 0.0025
 
+
+class SeleniumSetup:
+    def __init__(self):
+
+        chrome_options = Options()
+        ua = UserAgent()
+        chrome_options.add_argument(f'user-agent={ua.random}')
+
+        chrome_options.add_argument('--disable-blink-features')
+        chrome_options.add_argument('--headless')
+        self.driver = webdriver.Chrome(options=chrome_options)
+
+    def fetch_html(self, url):
+        self.driver.get(url)
+        return self.driver.page_source
+        try:
+            WebDriverWait(self.driver, 2).until(EC.presence_of_element_located((By.XPATH, "//h1[@itemprop='name']")))
+            return self.driver.page_source
+        except TimeoutException:
+            print(f"Timed out waiting for page to load{url}")
+            return None
+    def quit_driver(self):
+        self.driver.quit()
 
 class ListAmHouseData:
     cookies = {
@@ -52,7 +80,7 @@ class ListAmHouseData:
     }
 
     def __init__(self):
-        self.session = requests.Session()
+        self.selenium_setup = SeleniumSetup()
 
     def house_data_links_for_parce_by_category(self, category, page_count, time_to_repeat):
         '''
@@ -168,9 +196,10 @@ class ListAmHouseData:
         :param category: category from house_data_links.json file
         :return: parsed data sorted by categories
         '''
-        response = self.session.get(link, headers=self.headers)
-
-        soup = BeautifulSoup(response.text, 'lxml')
+        html = self.selenium_setup.fetch_html(link)
+        if html == None:
+            return None
+        soup = BeautifulSoup(html, 'lxml')
 
         title = soup.find('h1', itemprop='name')
         # Title for data
@@ -395,18 +424,16 @@ class ListAmHouseData:
 
 if __name__ == "__main__":
     house = ListAmHouseData()
-    #pprint.pprint(house.fetch_and_parse_link("https://www.list.am/item/19630058", "land-rent"))
-    #house.parse_link()
-#     categories_to_parse = ["apartments-sale","houses-sale","houses-rent","garages-parking-slots-sale","rooms-rent","event-venues","tnak-krpak-rent","apartments-long_term-rent","commercial-estate-offices-rent","commercial-estate-sale",
+#    categories_to_parse = ["apartments-sale","houses-sale","houses-rent","garages-parking-slots-sale","rooms-rent","event-venues","tnak-krpak-rent","apartments-long_term-rent","commercial-estate-offices-rent","commercial-estate-sale",
 # "new-apartments-sale","garages-parking-slots-rent","rooms-daily-rent","land-sale","daily-apartments-rent","daily-house-rent","tnak-krpak-sale","new-houses-sale","land-rent"]
 #     for categorie in categories_to_parse:
 #         print(f"Started to parse {categorie} in {datetime.now()}")
 #         house.parse_link(categorie)
 #         print(f"Finished to making a file in {datetime.now()}")
 
-    #"apartments-sale","houses-sale","houses-rent",,"rooms-rent","event-venues","tnak-krpak-rent","apartments-long_term-rent","commercial-estate-offices-rent","commercial-estate-sale",
-# ,,"daily-apartments-rent",,"tnak-krpak-sale",
-    category = "tnak-krpak-sale"
-    print(f"Started to parse {category} in {datetime.now()}")
-    house.parse_link(category)
-    print(f"Finished to making a file in {datetime.now()}")
+    a = ["apartments-sale", "houses-sale", "houses-rent", "garages-parking-slots-sale", "rooms-rent", "event-venues",
+     "tnak-krpak-rent", "apartments-long_term-rent", "commercial-estate-offices-rent", "commercial-estate-sale",
+     "new-apartments-sale","garages-parking-slots-rent","land-sale","daily-apartments-rent","daily-house-rent"]
+
+    house.parse_link("commercial-estate-sale")
+    house.selenium_setup.quit_driver()

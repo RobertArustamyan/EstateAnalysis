@@ -41,7 +41,7 @@ def getting_lat_long(id: int):
         lat_long = [float(coord) for coord in lat_long_str.split(',')]
         return lat_long[:2]
     else:
-        print(f"Latitude and longitude not found in {id}")
+        print(f'Lat long not found for {id}')
         return None
 
 
