@@ -1,3 +1,5 @@
+import random
+
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -11,13 +13,25 @@ import pprint
 import csv
 import urllib3
 from datetime import datetime
+from fake_useragent import UserAgent
+
 
 urllib3.disable_warnings()
 
 AMD_TO_USD = 0.0025
 
+proxies = [
+    'https://UX8KfY:05CVG0@217.29.53.133:11771',
+    'https://2BHXm7:U0GXqA@217.29.53.70:13307',
+    'https://2BHXm7:U0GXqA@217.29.53.64:12143',
+    'https://2BHXm7:U0GXqA@217.29.53.64:12144',
+    'https://2BHXm7:U0GXqA@217.29.53.64:12145',
+]
 
 class ListAmHouseData:
+    '''
+    Class for getting all data from List.am
+    '''
     cookies = {
         '__stripe_mid': 'b455a402-4c15-473b-80ff-0770047fe1bcdcc265',
         '_gid': 'GA1.2.1698014694.1708345634',
@@ -53,7 +67,7 @@ class ListAmHouseData:
 
     def __init__(self):
         self.session = requests.Session()
-
+        self.ua = UserAgent()
     def house_data_links_for_parce_by_category(self, category, page_count, time_to_repeat):
         '''
         Retrieve list of links for parsing per category from list.am
@@ -67,8 +81,9 @@ class ListAmHouseData:
         for _ in range(time_to_repeat):
             i = 1
             while i <= page_count:
+                proxy = random.choice(proxies)
                 response = requests.get(f'https://www.list.am/category/{category}/{i}', cookies=self.cookies,
-                                        headers=self.headers,verify=False,timeout=5)
+                                        headers=self.headers,verify=False,proxies={'http':proxy})
                 soup = BeautifulSoup(response.text, features="lxml")
                 links = soup.find_all('a')
                 print(f"{category} - {i}")
@@ -143,6 +158,7 @@ class ListAmHouseData:
             futures = [executor.submit(self.fetch_and_parse_links, category_to_parse, data[category_to_parse])]
             for future in concurrent.futures.as_completed(futures):
                 parsed_data.extend(future.result())
+
         csv_filename = f"Data/{category_to_parse}.csv"
 
         with open(csv_filename, 'w', newline='', encoding='utf-8') as csvfile:
@@ -165,7 +181,23 @@ class ListAmHouseData:
         :param category: category from house_data_links.json file
         :return: parsed data sorted by categories
         '''
-        response = self.session.get(link, headers=self.headers)
+
+        self.headers['user-agent'] = self.ua.random
+        try:
+            proxy = random.choice(proxies)
+            response = self.session.get(link, headers=self.headers,proxies={'http':proxy})
+        except requests.exceptions.ProxyError as e:
+            print(f"Proxy Error: {e}")
+            return None
+        except requests.exceptions.ConnectionError as e:
+            print(f"Connection Error: {e}")
+            return None
+        except requests.exceptions.Timeout as e:
+            print(f"Timeout Error: {e}")
+            return None
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
 
         soup = BeautifulSoup(response.text, 'lxml')
 
@@ -250,9 +282,9 @@ class ListAmHouseData:
                 else:
                     RoomCount = int(all_attributes[item])
             elif item == 'Սանհանգույցների քանակ':
-                if isinstance(all_attributes[item], int) and int(all_attributes[item]) == 1:
+                if all_attributes[item] == '1':
                     BathroomCount = 1
-                elif isinstance(all_attributes[item], int) and int(all_attributes[item]) == 2:
+                elif all_attributes[item] == '2':
                     BathroomCount = 2
                 else:
                     BathroomCount = 3
@@ -392,7 +424,6 @@ class ListAmHouseData:
 if __name__ == "__main__":
     house = ListAmHouseData()
     #pprint.pprint(house.fetch_and_parse_link("https://www.list.am/item/19630058", "land-rent"))
-    #house.parse_link()
 #     categories_to_parse = ["apartments-sale","houses-sale","houses-rent","garages-parking-slots-sale","rooms-rent","event-venues","tnak-krpak-rent","apartments-long_term-rent","commercial-estate-offices-rent","commercial-estate-sale",
 # "new-apartments-sale","garages-parking-slots-rent","rooms-daily-rent","land-sale","daily-apartments-rent","daily-house-rent","tnak-krpak-sale","new-houses-sale","land-rent"]
 #     for categorie in categories_to_parse:
@@ -400,5 +431,8 @@ if __name__ == "__main__":
 #         house.parse_link(categorie)
 #         print(f"Finished to making a file in {datetime.now()}")
 
-    #"apartments-sale","houses-sale","houses-rent",,"rooms-rent","event-venues","tnak-krpak-rent","apartments-long_term-rent","commercial-estate-offices-rent","commercial-estate-sale",
-# ,,"daily-apartments-rent",,"tnak-krpak-sale",
+    #"apartments-sale","houses-sale","houses-rent",,"commercial-estate-offices-rent","commercial-estate-sale",
+#
+    categories  = ["apartments-sale", "new-apartments-sale","garages-parking-slots-rent","rooms-daily-rent","land-sale","daily-apartments-rent","daily-house-rent","tnak-krpak-sale","new-houses-sale","land-rent"]
+    for categorie in categories:
+        house.parse_link(categorie)
