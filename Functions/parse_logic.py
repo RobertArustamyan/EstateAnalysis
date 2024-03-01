@@ -3,8 +3,8 @@ import random
 import requests
 from bs4 import BeautifulSoup
 import time
-from Functions.get_latitude_longtitude import getting_lat_long
-from Functions.category_dicts import get_dict_for_type, get_dict_for_bld_type, get_dict_furniture, get_dict_repair, \
+from get_latitude_longtitude import getting_lat_long
+from category_dicts import get_dict_for_type, get_dict_for_bld_type, get_dict_furniture, get_dict_repair, \
     get_guest_count, get_house_has_dict
 import json
 import concurrent.futures
@@ -15,11 +15,11 @@ import urllib3
 from datetime import datetime
 from fake_useragent import UserAgent
 
-
 urllib3.disable_warnings()
 
+# Dram to USD
 AMD_TO_USD = 0.0025
-
+# Proxy lists for parsing
 proxies = [
     'https://UX8KfY:05CVG0@217.29.53.133:11771',
     'https://2BHXm7:U0GXqA@217.29.53.70:13307',
@@ -27,6 +27,7 @@ proxies = [
     'https://2BHXm7:U0GXqA@217.29.53.64:12144',
     'https://2BHXm7:U0GXqA@217.29.53.64:12145',
 ]
+
 
 class ListAmHouseData:
     '''
@@ -68,7 +69,8 @@ class ListAmHouseData:
     def __init__(self):
         self.session = requests.Session()
         self.ua = UserAgent()
-    def house_data_links_for_parce_by_category(self, category, page_count, time_to_repeat):
+
+    def __house_data_links_for_parce_by_category(self, category, page_count, time_to_repeat):
         '''
         Retrieve list of links for parsing per category from list.am
 
@@ -83,7 +85,7 @@ class ListAmHouseData:
             while i <= page_count:
                 proxy = random.choice(proxies)
                 response = requests.get(f'https://www.list.am/category/{category}/{i}', cookies=self.cookies,
-                                        headers=self.headers,verify=False,proxies={'http':proxy})
+                                        headers=self.headers, verify=False, proxies={'http': proxy})
                 soup = BeautifulSoup(response.text, features="lxml")
                 links = soup.find_all('a')
                 print(f"{category} - {i}")
@@ -118,8 +120,8 @@ class ListAmHouseData:
         }
 
         # Define a function to fetch links for a given category
-        def fetch_links(category, page_count):
-            return self.house_data_links_for_parce_by_category(category, page_count, time_to_repeat)
+        def __fetch_links(category, page_count):
+            return self.__house_data_links_for_parce_by_category(category, page_count, time_to_repeat)
 
         # List of categories and page counts
         categories = [
@@ -134,7 +136,8 @@ class ListAmHouseData:
 
         # Execute the function concurrently for each category
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = {executor.submit(fetch_links, category, page_count): category for category, page_count in categories}
+            futures = {executor.submit(__fetch_links, category, page_count): category for category, page_count in
+                       categories}
             for future in concurrent.futures.as_completed(futures):
                 category_id = futures[future]
                 category_name = category_names[category_id]
@@ -143,23 +146,23 @@ class ListAmHouseData:
 
         # Write data to JSON file
         json_data = json.dumps(data, indent=4)
-        with open("Data/house_data_links.json", "w") as json_file:
+        with open("../Data/house_data_links.json", "w") as json_file:
             json_file.write(json_data)
 
         return json_data
 
     def parse_link(self, category_to_parse):
-        with open("Data/house_data_links.json", "r") as json_file:
+        with open("../Data/house_data_links.json", "r") as json_file:
             data = json.load(json_file)
 
         parsed_data = []
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = [executor.submit(self.fetch_and_parse_links, category_to_parse, data[category_to_parse])]
+            futures = [executor.submit(self.__fetch_and_parse_links, category_to_parse, data[category_to_parse])]
             for future in concurrent.futures.as_completed(futures):
                 parsed_data.extend(future.result())
 
-        csv_filename = f"Data/{category_to_parse}.csv"
+        csv_filename = f"../Data/{category_to_parse}.csv"
 
         with open(csv_filename, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=parsed_data[0].keys())
@@ -168,13 +171,13 @@ class ListAmHouseData:
 
         return csv_filename
 
-    def fetch_and_parse_links(self, category, links):
+    def __fetch_and_parse_links(self, category, links):
         parsed_data = []
         for link in links:
-            parsed_data.append(self.fetch_and_parse_link(link, category))
+            parsed_data.append(self.__fetch_and_parse_link(link, category))
         return parsed_data
 
-    def fetch_and_parse_link(self, link, category):
+    def __fetch_and_parse_link(self, link, category):
         '''
         Parsing data for link
         :param link: Link of data from list.am
@@ -185,7 +188,7 @@ class ListAmHouseData:
         self.headers['user-agent'] = self.ua.random
         try:
             proxy = random.choice(proxies)
-            response = self.session.get(link, headers=self.headers,proxies={'http':proxy})
+            response = self.session.get(link, headers=self.headers, proxies={'http': proxy})
         except requests.exceptions.ProxyError as e:
             print(f"Proxy Error: {e}")
             return None
@@ -222,7 +225,7 @@ class ListAmHouseData:
         Latitude, Longitude = coordinates if coordinates else (None, None)
 
         price = soup.find('span', class_='price x')
-        PriceContent = int(price['content']) if price else None
+        PriceContent = int(float(price['content']) // 1) if price else None
         price_currency = price.meta['content'] if price and price.meta else None
         # Price for data USD
         if PriceContent and price_currency == "AMD":
@@ -382,6 +385,7 @@ class ListAmHouseData:
                     PrePayment = False
                 else:
                     PrePayment = True
+
         return {
             'link': link,  # Link of the item
             'category': CategoryTitle,  # Category(rent,sale,inprocess,dailyrent)
@@ -416,23 +420,13 @@ class ListAmHouseData:
             'childer': ChilderInfo,  # (Allowed,NotAllowed,ByAgreement)
             'animal': AnimalInfo,  # (Allowed,NotAllowed,ByAgreement)
             'utilitypayment': UtilityPayments,  # Info about Utility Payments
-            'prepayment' : PrePayment, # Info about pre payment
+            'prepayment': PrePayment,  # Info about pre payment
             'description': DescriptionContent,  # Description added by user
         }
 
 
 if __name__ == "__main__":
     house = ListAmHouseData()
-    #pprint.pprint(house.fetch_and_parse_link("https://www.list.am/item/19630058", "land-rent"))
-#     categories_to_parse = ["apartments-sale","houses-sale","houses-rent","garages-parking-slots-sale","rooms-rent","event-venues","tnak-krpak-rent","apartments-long_term-rent","commercial-estate-offices-rent","commercial-estate-sale",
-# "new-apartments-sale","garages-parking-slots-rent","rooms-daily-rent","land-sale","daily-apartments-rent","daily-house-rent","tnak-krpak-sale","new-houses-sale","land-rent"]
-#     for categorie in categories_to_parse:
-#         print(f"Started to parse {categorie} in {datetime.now()}")
-#         house.parse_link(categorie)
-#         print(f"Finished to making a file in {datetime.now()}")
-
-    #"apartments-sale","houses-sale","houses-rent",,"commercial-estate-offices-rent","commercial-estate-sale",
-#
-    categories  = ["apartments-sale", "new-apartments-sale","garages-parking-slots-rent","rooms-daily-rent","land-sale","daily-apartments-rent","daily-house-rent","tnak-krpak-sale","new-houses-sale","land-rent"]
-    for categorie in categories:
-        house.parse_link(categorie)
+    print(f'started at {datetime.now()}')
+    house.parse_link('houses-rent')
+    print(f'finished at {datetime.now()}')
