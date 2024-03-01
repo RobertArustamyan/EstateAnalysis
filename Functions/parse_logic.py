@@ -29,6 +29,29 @@ proxies = [
 ]
 
 
+class SeleniumSetup:
+    def __init__(self):
+
+        chrome_options = Options()
+        ua = UserAgent()
+        chrome_options.add_argument(f'user-agent={ua.random}')
+
+        chrome_options.add_argument('--disable-blink-features')
+        chrome_options.add_argument('--headless')
+        self.driver = webdriver.Chrome(options=chrome_options)
+
+    def fetch_html(self, url):
+        self.driver.get(url)
+        return self.driver.page_source
+        try:
+            WebDriverWait(self.driver, 2).until(EC.presence_of_element_located((By.XPATH, "//h1[@itemprop='name']")))
+            return self.driver.page_source
+        except TimeoutException:
+            print(f"Timed out waiting for page to load{url}")
+            return None
+    def quit_driver(self):
+        self.driver.quit()
+
 class ListAmHouseData:
     '''
     Class for getting all data from List.am
@@ -427,6 +450,4 @@ class ListAmHouseData:
 
 if __name__ == "__main__":
     house = ListAmHouseData()
-    print(f'started at {datetime.now()}')
-    house.parse_link('houses-rent')
-    print(f'finished at {datetime.now()}')
+
