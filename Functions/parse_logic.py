@@ -26,6 +26,10 @@ proxies = [
     'https://2BHXm7:U0GXqA@217.29.53.64:12143',
     'https://2BHXm7:U0GXqA@217.29.53.64:12144',
     'https://2BHXm7:U0GXqA@217.29.53.64:12145',
+    'https://nP3zWz:01Mbdx@217.29.53.211:13504',
+    'https://nP3zWz:01Mbdx@217.29.53.211:13505',
+    'https://nP3zWz:01Mbdx@217.29.53.211:13506',
+    'https://nP3zWz:01Mbdx@217.29.53.211:13507'
 ]
 
 
@@ -49,8 +53,10 @@ class SeleniumSetup:
         except TimeoutException:
             print(f"Timed out waiting for page to load{url}")
             return None
+
     def quit_driver(self):
         self.driver.quit()
+
 
 class ListAmHouseData:
     '''
@@ -175,7 +181,7 @@ class ListAmHouseData:
         return json_data
 
     def parse_link(self, category_to_parse):
-        with open("../Data/house_data_links.json", "r") as json_file:
+        with open("../links_by_category.json", "r") as json_file:
             data = json.load(json_file)
 
         parsed_data = []
@@ -185,7 +191,7 @@ class ListAmHouseData:
             for future in concurrent.futures.as_completed(futures):
                 parsed_data.extend(future.result())
 
-        csv_filename = f"../Data/{category_to_parse}.csv"
+        csv_filename = f"../Data/{category_to_parse}-2.csv"
 
         with open(csv_filename, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=parsed_data[0].keys())
@@ -229,7 +235,10 @@ class ListAmHouseData:
 
         title = soup.find('h1', itemprop='name')
         # Title for data
-        TitleContent = title.text if title else None
+        if title:
+            TitleContent = title.text
+        else:
+            return None
         # Address of data
         AddressDiv = soup.find('div', class_='loc')
         AddressContent = AddressDiv.find('a').text if AddressDiv and AddressDiv.find('a') else None
@@ -450,4 +459,7 @@ class ListAmHouseData:
 
 if __name__ == "__main__":
     house = ListAmHouseData()
-
+    # USE THIS FUNC WHEN YOU START(FUNC MAKES A FILE WITH ALL PARSE LINKS)
+    # house.house_data_links_json()
+    # USE THIS FUNC FOR MAKEING .CSV FILE FOR CATEGORY WITH PARSED DATA
+    # house.parse_link()
