@@ -21,7 +21,6 @@ urllib3.disable_warnings()
 AMD_TO_USD = 0.0025
 # Proxy lists for parsing
 proxies = [
-    'https://UX8KfY:05CVG0@217.29.53.133:11771',
     'https://2BHXm7:U0GXqA@217.29.53.70:13307',
     'https://2BHXm7:U0GXqA@217.29.53.64:12143',
     'https://2BHXm7:U0GXqA@217.29.53.64:12144',
@@ -31,31 +30,6 @@ proxies = [
     'https://nP3zWz:01Mbdx@217.29.53.211:13506',
     'https://nP3zWz:01Mbdx@217.29.53.211:13507'
 ]
-
-
-class SeleniumSetup:
-    def __init__(self):
-
-        chrome_options = Options()
-        ua = UserAgent()
-        chrome_options.add_argument(f'user-agent={ua.random}')
-
-        chrome_options.add_argument('--disable-blink-features')
-        chrome_options.add_argument('--headless')
-        self.driver = webdriver.Chrome(options=chrome_options)
-
-    def fetch_html(self, url):
-        self.driver.get(url)
-        return self.driver.page_source
-        try:
-            WebDriverWait(self.driver, 2).until(EC.presence_of_element_located((By.XPATH, "//h1[@itemprop='name']")))
-            return self.driver.page_source
-        except TimeoutException:
-            print(f"Timed out waiting for page to load{url}")
-            return None
-
-    def quit_driver(self):
-        self.driver.quit()
 
 
 class ListAmHouseData:
@@ -434,6 +408,7 @@ class ListAmHouseData:
             'buildingtype': BuildingType,  # Type of building
             'elevator': Elevator,  # (True, False, None)
             'floorcount': FloorCount,  # Number of floors
+            'floor': Floor,  # On which floor is
             'roomcount': RoomCount,  # Number of rooms
             'bathroomcount': BathroomCount,  # Number of bathrooms
             'newbuilded': NewBuilded,  # Is building newbuilded or no
