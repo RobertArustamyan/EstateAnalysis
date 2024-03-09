@@ -1,3 +1,19 @@
+'''
+List.am Real Estate Data Scraper
+
+Description:
+This Python script is designed to scrape real estate data from List.am, a website that lists various properties for sale or rent. It utilizes web scraping techniques to extract information such as property details, prices, locations, and more.
+
+Usage:
+1. Ensure to change proxies and add yours
+2. Change currency if needed!
+Note:
+- This script is provided for educational purposes only. Do not use it for commercial purposes without proper authorization from List.am or the respective website.
+- Web scraping may be subject to legal restrictions or the terms of service of the website being scraped. Ensure you have the right to scrape data from List.am or any other website before doing so.
+- Use responsibly and respectfully, and considerate of the website's resources and policies.
+'''
+
+
 import random
 
 import requests
