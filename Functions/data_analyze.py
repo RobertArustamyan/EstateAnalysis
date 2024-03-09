@@ -9,8 +9,15 @@ YEREVAN_CENTER_LAT, YEREVAN_CENTER_LONG = 40.18111, 44.51361
 
 
 class DataAnalyse:
-
+    '''
+    Class that have methods that is used in Analyse.ipynb for making ML model
+    '''
     def __init__(self, center_lat: float, center_long: float):
+        '''
+        Constructor that fixes some bugs in column names, changes types of columns
+        :param center_lat: Latitude for counting distance
+        :param center_long: Longtitude for counting distance
+        '''
         self.df = pd.read_csv(r'C:\Users\Mikayel\PycharmProjects\AnalysProject\Data\CombinedData.csv', encoding='utf-8', low_memory=False)
         self.__making_distance_column(center_lat, center_long)
         self.df.rename(columns={'childer': 'children'}, inplace=True)
@@ -51,11 +58,25 @@ class DataAnalyse:
         plt.show()
 
     def data_mean_by_distance(self, filt: ndarray, distance_from_center: float, plus_minus_km: float):
+        '''
+        Func helping analyse the df
+        :param filt: Filter for using df[filter]
+        :param distance_from_center: Haversine from center (lat,long) to house
+        :param plus_minus_km: For exp. if it is 2 the result will be distance_from_center - 2 to  distance_from_center + 2
+        :return: returns mean value
+        '''
         new_filt = (filt) & (self.df['distance_from_center'] >= distance_from_center - plus_minus_km) & (
                 self.df['distance_from_center'] <= distance_from_center + plus_minus_km)
         return self.df[new_filt]['price'].mean()
 
     def data_median_by_distance(self, filt: ndarray, distance_from_center: float, plus_minus_km: float):
+        '''
+        Func helping analyse the df
+        :param filt: Filter for using df[filter]
+        :param distance_from_center: Haversine from center (lat,long) to house
+        :param plus_minus_km: For exp. if it is 2 the result will be distance_from_center - 2 to  distance_from_center + 2
+        :return: returns median value
+        '''
         new_filt = (filt) & (self.df['distance_from_center'] >= distance_from_center - plus_minus_km) & (
                 self.df['distance_from_center'] <= distance_from_center + plus_minus_km)
         return self.df[new_filt]['price'].median()
