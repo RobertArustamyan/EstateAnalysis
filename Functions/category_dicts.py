@@ -4,10 +4,10 @@ def get_dict_for_type(item):
     :param item: name in armenian
     :return: type in english
     '''
-    item_dict =  {
-        'Տուն' : 'house',
+    item_dict = {
+        'Տուն': 'house',
         'Թաունհաուզ': 'townhouse',
-        'Ամառանոց' : 'summerhouse',
+        'Ամառանոց': 'summerhouse',
         'Բնակարան': 'apartment',
         'Սեփական տուն': 'ownhouse',
         'Հյուրանոց': 'hotel',
@@ -31,8 +31,8 @@ def get_dict_for_type(item):
         'Արդյունաբերական օգտագործման': 'industrialuse',
         'Հասարակական շինությունների համար': 'publicbuildings',
         'Ընդհանուր օգտագործման': 'generaluse',
-        'Ավտոտնակ' : 'garage',
-        'Ավտոկայանատեղի' : 'parkinglot'
+        'Ավտոտնակ': 'garage',
+        'Ավտոկայանատեղի': 'parkinglot'
     }
 
     if item and item in item_dict.keys():
@@ -48,25 +48,31 @@ def get_dict_for_bld_type(item):
         :return: type in english
         '''
     item_dict = {
-        "Քարե" : "stone",
-        "Պանելային" : "panel",
-        "Մոնոլիտ" : "monolith",
-        "Աղյուսե" : "brick",
-        "Կասետային" : "tape",
-        "Փայտե" : "wooden",
+        "Քարե": "stone",
+        "Պանելային": "panel",
+        "Մոնոլիտ": "monolith",
+        "Աղյուսե": "brick",
+        "Կասետային": "tape",
+        "Փայտե": "wooden",
     }
 
     if item and item in item_dict.keys():
         return item_dict[item]
     else:
         return None
+
 
 def get_dict_furniture(item):
+    '''
+            Used in parse_logic.py for finding type
+            :param item: name in armenian
+            :return: type in english
+            '''
     item_dict = {
-        'Առկա է' : 'available',
-        'Առկա չէ' : 'notavailable',
-        'Մասնակի կահույք' : 'partly',
-        'Համաձայնությամբ' : 'agreement'
+        'Առկա է': 'available',
+        'Առկա չէ': 'notavailable',
+        'Մասնակի կահույք': 'partly',
+        'Համաձայնությամբ': 'agreement'
     }
 
     if item and item in item_dict.keys():
@@ -74,7 +80,13 @@ def get_dict_furniture(item):
     else:
         return None
 
+
 def get_dict_repair(item):
+    '''
+            Used in parse_logic.py for finding type
+            :param item: name in armenian
+            :return: type in english
+            '''
     item_dict = {
         'Չվերանորոգված': 'unrepaired',
         'Հին վերանորոգում': 'oldrepair',
@@ -90,15 +102,21 @@ def get_dict_repair(item):
     else:
         return None
 
+
 def get_guest_count(item):
+    '''
+            Used in parse_logic.py for finding type
+            :param item: name in armenian
+            :return: type in english
+            '''
     item_dict = {
-        'մինչև 15 անձ' : '<15',
-        '15-ից 30 անձ' : '15-30',
-        '30-ից 50 անձ' : '30-50',
-        '50-ից 100 անձ' : '50-100',
-        '100-ից 300 անձ' : '100-300',
+        'մինչև 15 անձ': '<15',
+        '15-ից 30 անձ': '15-30',
+        '30-ից 50 անձ': '30-50',
+        '50-ից 100 անձ': '50-100',
+        '100-ից 300 անձ': '100-300',
         '300-ից 500 անձ': '300-500',
-        '500 և ավելի անձ' : '500>'
+        '500 և ավելի անձ': '500>'
     }
 
     if item and item in item_dict.keys():
@@ -106,33 +124,39 @@ def get_guest_count(item):
     else:
         return None
 
+
 def get_house_has_dict(items):
+    '''
+            Used in parse_logic.py for finding type
+            :param item: name in armenian
+            :return: type in english
+            '''
     item_dict = {
-        'հեռուստացույց' : 'tv',
-        'օդորակիչ' : 'conditioner',
-        'ինտերնետ' : 'wi-fi',
-        'կայանատեղի' : 'parking-lot',
-        'սառնարան' : 'refrigerator',
-        'սալօջախ' : 'stove',
-        'աման լվացող մեքենա' : 'dishwasher',
-        'լվացքի մեքենա' : 'washing-machine',
-        'ջրատաքացուցիչ' : 'water-heater',
-        'լողավազան' : 'swimming-pool',
-        'սաունա' : 'sauna',
-        'բուխարի' : 'fireplace',
-        'խորովածի վառարան' : 'barbecue-oven',
-        'բիլիարդ' : 'billiard',
-        'տաղավար' : 'pavilion',
-        'անվտանգության համակարգ' : 'security-system',
-        'էլեկտրականություն' : 'electricity',
-        'ջուր' : 'water',
-        'ջեռուցում' : 'warming',
-        'էլեկտրական մեքենաների լիցքավորիչ' : 'car-charger',
-        'ավտոմատ դարպասներ' : 'automatic-gates',
-        'տեսահսկում' : 'video-security',
-        'սրբիչներ' : 'towels',
-        'անկողնային պարագաներ' : 'bedding',
-        'հիգիենայի պարագաներ' : 'hygiene-items',
+        'հեռուստացույց': 'tv',
+        'օդորակիչ': 'conditioner',
+        'ինտերնետ': 'wi-fi',
+        'կայանատեղի': 'parking-lot',
+        'սառնարան': 'refrigerator',
+        'սալօջախ': 'stove',
+        'աման լվացող մեքենա': 'dishwasher',
+        'լվացքի մեքենա': 'washing-machine',
+        'ջրատաքացուցիչ': 'water-heater',
+        'լողավազան': 'swimming-pool',
+        'սաունա': 'sauna',
+        'բուխարի': 'fireplace',
+        'խորովածի վառարան': 'barbecue-oven',
+        'բիլիարդ': 'billiard',
+        'տաղավար': 'pavilion',
+        'անվտանգության համակարգ': 'security-system',
+        'էլեկտրականություն': 'electricity',
+        'ջուր': 'water',
+        'ջեռուցում': 'warming',
+        'էլեկտրական մեքենաների լիցքավորիչ': 'car-charger',
+        'ավտոմատ դարպասներ': 'automatic-gates',
+        'տեսահսկում': 'video-security',
+        'սրբիչներ': 'towels',
+        'անկողնային պարագաներ': 'bedding',
+        'հիգիենայի պարագաներ': 'hygiene-items',
         'խոհանոց': 'kitchen',
         'բար': 'bar',
         'բեմ': 'stage',
