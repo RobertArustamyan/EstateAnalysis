@@ -14,6 +14,10 @@ class DataAnalyse:
         self.df = pd.read_csv('Data/CombinedData.csv', encoding='utf-8', low_memory=False)
         self.__making_distance_column(center_lat, center_long)
         self.df.rename(columns={'childer': 'children'}, inplace=True)
+        self.df.dropna(subset=['floorcount','roomcount','bathroomcount'], inplace=True)
+        self.df['floorcount'] = self.df['floorcount'].astype(int)
+        self.df['roomcount'] = self.df['roomcount'].astype(int)
+        self.df['bathroomcount'] = self.df['bathroomcount'].astype(int)
 
     def __making_distance_column(self, center_lat: float, center_long: float) -> None:
         '''
@@ -36,8 +40,8 @@ class DataAnalyse:
         :param max_price: maximum price
         :return: returns plot
         '''
-        x = self.df.loc[filt,'distance_from_center']
-        y = self.df.loc[filt,'price']
+        x = self.df.loc[filt, 'distance_from_center']
+        y = self.df.loc[filt, 'price']
         plt.plot(x, y, 'o')
         plt.title('Price change depending on distance')
         plt.xlabel('Distance')
@@ -47,11 +51,13 @@ class DataAnalyse:
         plt.show()
 
     def data_mean_by_distance(self, filt: ndarray, distance_from_center: float, plus_minus_km: float):
-        new_filt = (filt) & (self.df['distance_from_center'] >= distance_from_center - plus_minus_km) & (self.df['distance_from_center'] <= distance_from_center + plus_minus_km)
+        new_filt = (filt) & (self.df['distance_from_center'] >= distance_from_center - plus_minus_km) & (
+                self.df['distance_from_center'] <= distance_from_center + plus_minus_km)
         return self.df[new_filt]['price'].mean()
 
     def data_median_by_distance(self, filt: ndarray, distance_from_center: float, plus_minus_km: float):
-        new_filt = (filt) & (self.df['distance_from_center'] >= distance_from_center - plus_minus_km) & (self.df['distance_from_center'] <= distance_from_center + plus_minus_km)
+        new_filt = (filt) & (self.df['distance_from_center'] >= distance_from_center - plus_minus_km) & (
+                self.df['distance_from_center'] <= distance_from_center + plus_minus_km)
         return self.df[new_filt]['price'].median()
 
     def find_outliers(self, filt: ndarray, plot=True):
@@ -74,13 +80,33 @@ class DataAnalyse:
         outliers = filtered_df[(filtered_df['price'] < lower_bound) | (filtered_df['price'] > upper_bound)]
         if plot:
             colors = {'medians': 'Black', 'caps': 'Red'}
-            filtered_df['price'].plot.box(color=colors)
+            filtered_df['price'].A
             plt.title('Box Plot of Price')
             plt.ylabel('Price')
             plt.ylim(filtered_df['price'].min() * 0.9, filtered_df['price'].mean() * 4)
             plt.show()
 
         return outliers
+
+    def remove_outliers(self, filt: ndarray):
+        '''
+        Remove outliers depending on price
+
+        :param filt: filter of data
+        :return: DataFrame without outliers
+        '''
+        filtered_df = self.df[filt]
+
+        q1 = filtered_df['price'].quantile(0.25)
+        q3 = filtered_df['price'].quantile(0.75)
+        iqr = q3 - q1
+
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+
+        filtered_df = filtered_df[(filtered_df['price'] >= lower_bound) & (filtered_df['price'] <= upper_bound)]
+
+        return filtered_df
 
     def price_per_square_meter(self, filt: ndarray) -> float:
         '''
@@ -99,8 +125,11 @@ class DataAnalyse:
 
         return np.median(price_per_sqm)
 
+
 if __name__ == "__main__":
     analyze = DataAnalyse(YEREVAN_CENTER_LAT, YEREVAN_CENTER_LONG)
 
     filt = (analyze.df['category_from_list'] == 'apartments-sale')
-    print(analyze.price_per_square_meter(filt))
+    print(analyze.df[filt]['floorcount'].isna().sum())
+    print(analyze.df[filt]['roomcount'].isna().sum())
+    print(analyze.df[filt]['bathroomcount'].isna().sum())
