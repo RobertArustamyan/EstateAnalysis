@@ -14,7 +14,7 @@
     background-image: linear-gradient(to bottom, #4CAF50, #2196F3);
 }
 
-h2 {
+h2,h3z {
     color: #333;
     text-align: center;
 }
@@ -138,6 +138,10 @@ button[type="submit"]:hover {
         </div>
 
         <button type="submit">Predict Price</button>
+        {% if predicted_price %}
+        <h3>Predicted Price: {{ predicted_price }}</h3>
+        {% endif %}
     </form>
+
 </body>
 </html>
