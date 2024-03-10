@@ -1,0 +1,61 @@
+Functions package
+=================
+
+Submodules
+----------
+
+Functions.air\_distance module
+------------------------------
+
+.. automodule:: Functions.air_distance
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Functions.category\_dicts module
+--------------------------------
+
+.. automodule:: Functions.category_dicts
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Functions.data\_analyze module
+------------------------------
+
+.. automodule:: Functions.data_analyze
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Functions.get\_latitude\_longtitude module
+------------------------------------------
+
+.. automodule:: Functions.get_latitude_longtitude
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Functions.parse\_logic module
+-----------------------------
+
+.. automodule:: Functions.parse_logic
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Functions.transform\_to\_nums module
+------------------------------------
+
+.. automodule:: Functions.transform_to_nums
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: Functions
+   :members:
+   :undoc-members:
+   :show-inheritance:

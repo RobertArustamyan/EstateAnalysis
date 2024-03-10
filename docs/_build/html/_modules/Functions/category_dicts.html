@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Functions.category_dicts &mdash; Apartment Price Prediction(ML model) 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Apartment Price Prediction(ML model)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">AnalysProject</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Apartment Price Prediction(ML model)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Functions.category_dicts</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Functions.category_dicts</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="get_dict_for_type">
+<a class="viewcode-back" href="../../Functions.html#Functions.category_dicts.get_dict_for_type">[docs]</a>
+<span></span><span class="k">def</span> <span class="nf">get_dict_for_type</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Used in parse_logic.py for finding type</span>
+<span class="sd">    :param item: name in armenian</span>
+<span class="sd">    :return: type in english</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">item_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;Տուն&#39;</span><span class="p">:</span> <span class="s1">&#39;house&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Թաունհաուզ&#39;</span><span class="p">:</span> <span class="s1">&#39;townhouse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ամառանոց&#39;</span><span class="p">:</span> <span class="s1">&#39;summerhouse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Բնակարան&#39;</span><span class="p">:</span> <span class="s1">&#39;apartment&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Սեփական տուն&#39;</span><span class="p">:</span> <span class="s1">&#39;ownhouse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Հյուրանոց&#39;</span><span class="p">:</span> <span class="s1">&#39;hotel&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Հյուրատուն&#39;</span><span class="p">:</span> <span class="s1">&#39;guesthouse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Հոսթել&#39;</span><span class="p">:</span> <span class="s1">&#39;hostel&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Հանրակացարան&#39;</span><span class="p">:</span> <span class="s1">&#39;dormitory&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Գրասենյակային տարածք&#39;</span><span class="p">:</span> <span class="s1">&#39;officearea&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Առևտրային տարածք&#39;</span><span class="p">:</span> <span class="s1">&#39;commercialarea&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Արտադրական տարածք&#39;</span><span class="p">:</span> <span class="s1">&#39;productionarea&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Պահեստ&#39;</span><span class="p">:</span> <span class="s1">&#39;warehouse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ռեստորան&#39;</span><span class="p">:</span> <span class="s1">&#39;therestaurant&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ավտոսպասարկում&#39;</span><span class="p">:</span> <span class="s1">&#39;carservice&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Գործող բիզնես&#39;</span><span class="p">:</span> <span class="s1">&#39;operatingbusiness&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Շենք&#39;</span><span class="p">:</span> <span class="s1">&#39;building&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Հյուրանոց&#39;</span><span class="p">:</span> <span class="s1">&#39;hotel&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Բազմաֆունկցիոնալ գույք&#39;</span><span class="p">:</span> <span class="s1">&#39;multipurposeproperty&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Գյուղատնտեսական գույք&#39;</span><span class="p">:</span> <span class="s1">&#39;agriculturalproperty&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Այլ&#39;</span><span class="p">:</span> <span class="s1">&#39;other&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Գյուղատնտեսական&#39;</span><span class="p">:</span> <span class="s1">&#39;agricultural&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Բնակելի շինությունների համար&#39;</span><span class="p">:</span> <span class="s1">&#39;residentialbuildings&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Արդյունաբերական օգտագործման&#39;</span><span class="p">:</span> <span class="s1">&#39;industrialuse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Հասարակական շինությունների համար&#39;</span><span class="p">:</span> <span class="s1">&#39;publicbuildings&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ընդհանուր օգտագործման&#39;</span><span class="p">:</span> <span class="s1">&#39;generaluse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ավտոտնակ&#39;</span><span class="p">:</span> <span class="s1">&#39;garage&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ավտոկայանատեղի&#39;</span><span class="p">:</span> <span class="s1">&#39;parkinglot&#39;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">item</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">item_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">item_dict</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_dict_for_bld_type">
+<a class="viewcode-back" href="../../Functions.html#Functions.category_dicts.get_dict_for_bld_type">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dict_for_bld_type</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Used in parse_logic.py for finding type</span>
+<span class="sd">        :param item: name in armenian</span>
+<span class="sd">        :return: type in english</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+    <span class="n">item_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Քարե&quot;</span><span class="p">:</span> <span class="s2">&quot;stone&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Պանելային&quot;</span><span class="p">:</span> <span class="s2">&quot;panel&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Մոնոլիտ&quot;</span><span class="p">:</span> <span class="s2">&quot;monolith&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Աղյուսե&quot;</span><span class="p">:</span> <span class="s2">&quot;brick&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Կասետային&quot;</span><span class="p">:</span> <span class="s2">&quot;tape&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Փայտե&quot;</span><span class="p">:</span> <span class="s2">&quot;wooden&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">item</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">item_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">item_dict</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_dict_furniture">
+<a class="viewcode-back" href="../../Functions.html#Functions.category_dicts.get_dict_furniture">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dict_furniture</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Used in parse_logic.py for finding type</span>
+<span class="sd">            :param item: name in armenian</span>
+<span class="sd">            :return: type in english</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+    <span class="n">item_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;Առկա է&#39;</span><span class="p">:</span> <span class="s1">&#39;available&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Առկա չէ&#39;</span><span class="p">:</span> <span class="s1">&#39;notavailable&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Մասնակի կահույք&#39;</span><span class="p">:</span> <span class="s1">&#39;partly&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Համաձայնությամբ&#39;</span><span class="p">:</span> <span class="s1">&#39;agreement&#39;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">item</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">item_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">item_dict</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_dict_repair">
+<a class="viewcode-back" href="../../Functions.html#Functions.category_dicts.get_dict_repair">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dict_repair</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Used in parse_logic.py for finding type</span>
+<span class="sd">            :param item: name in armenian</span>
+<span class="sd">            :return: type in english</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+    <span class="n">item_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;Չվերանորոգված&#39;</span><span class="p">:</span> <span class="s1">&#39;unrepaired&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Հին վերանորոգում&#39;</span><span class="p">:</span> <span class="s1">&#39;oldrepair&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Մասնակի վերանորոգում&#39;</span><span class="p">:</span> <span class="s1">&#39;partical&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Կոսմետիկ վերանորոգում&#39;</span><span class="p">:</span> <span class="s1">&#39;cosmetic&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Եվրովերանորոգված&#39;</span><span class="p">:</span> <span class="s1">&#39;euro&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Դիզայներական ոճով վերանորոգված&#39;</span><span class="p">:</span> <span class="s1">&#39;designer-style&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Կապիտալ վերանորոգված&#39;</span><span class="p">:</span> <span class="s1">&#39;capital-reconstructed&#39;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">item</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">item_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">item_dict</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_guest_count">
+<a class="viewcode-back" href="../../Functions.html#Functions.category_dicts.get_guest_count">[docs]</a>
+<span class="k">def</span> <span class="nf">get_guest_count</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Used in parse_logic.py for finding type</span>
+<span class="sd">            :param item: name in armenian</span>
+<span class="sd">            :return: type in english</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+    <span class="n">item_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;մինչև 15 անձ&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;15&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;15-ից 30 անձ&#39;</span><span class="p">:</span> <span class="s1">&#39;15-30&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;30-ից 50 անձ&#39;</span><span class="p">:</span> <span class="s1">&#39;30-50&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;50-ից 100 անձ&#39;</span><span class="p">:</span> <span class="s1">&#39;50-100&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;100-ից 300 անձ&#39;</span><span class="p">:</span> <span class="s1">&#39;100-300&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;300-ից 500 անձ&#39;</span><span class="p">:</span> <span class="s1">&#39;300-500&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;500 և ավելի անձ&#39;</span><span class="p">:</span> <span class="s1">&#39;500&gt;&#39;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">item</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">item_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">item_dict</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_house_has_dict">
+<a class="viewcode-back" href="../../Functions.html#Functions.category_dicts.get_house_has_dict">[docs]</a>
+<span class="k">def</span> <span class="nf">get_house_has_dict</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Used in parse_logic.py for finding type</span>
+<span class="sd">            :param item: name in armenian</span>
+<span class="sd">            :return: type in english</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+    <span class="n">item_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;հեռուստացույց&#39;</span><span class="p">:</span> <span class="s1">&#39;tv&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;օդորակիչ&#39;</span><span class="p">:</span> <span class="s1">&#39;conditioner&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ինտերնետ&#39;</span><span class="p">:</span> <span class="s1">&#39;wi-fi&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;կայանատեղի&#39;</span><span class="p">:</span> <span class="s1">&#39;parking-lot&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;սառնարան&#39;</span><span class="p">:</span> <span class="s1">&#39;refrigerator&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;սալօջախ&#39;</span><span class="p">:</span> <span class="s1">&#39;stove&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;աման լվացող մեքենա&#39;</span><span class="p">:</span> <span class="s1">&#39;dishwasher&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;լվացքի մեքենա&#39;</span><span class="p">:</span> <span class="s1">&#39;washing-machine&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ջրատաքացուցիչ&#39;</span><span class="p">:</span> <span class="s1">&#39;water-heater&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;լողավազան&#39;</span><span class="p">:</span> <span class="s1">&#39;swimming-pool&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;սաունա&#39;</span><span class="p">:</span> <span class="s1">&#39;sauna&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;բուխարի&#39;</span><span class="p">:</span> <span class="s1">&#39;fireplace&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;խորովածի վառարան&#39;</span><span class="p">:</span> <span class="s1">&#39;barbecue-oven&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;բիլիարդ&#39;</span><span class="p">:</span> <span class="s1">&#39;billiard&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;տաղավար&#39;</span><span class="p">:</span> <span class="s1">&#39;pavilion&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;անվտանգության համակարգ&#39;</span><span class="p">:</span> <span class="s1">&#39;security-system&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;էլեկտրականություն&#39;</span><span class="p">:</span> <span class="s1">&#39;electricity&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ջուր&#39;</span><span class="p">:</span> <span class="s1">&#39;water&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ջեռուցում&#39;</span><span class="p">:</span> <span class="s1">&#39;warming&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;էլեկտրական մեքենաների լիցքավորիչ&#39;</span><span class="p">:</span> <span class="s1">&#39;car-charger&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ավտոմատ դարպասներ&#39;</span><span class="p">:</span> <span class="s1">&#39;automatic-gates&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;տեսահսկում&#39;</span><span class="p">:</span> <span class="s1">&#39;video-security&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;սրբիչներ&#39;</span><span class="p">:</span> <span class="s1">&#39;towels&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;անկողնային պարագաներ&#39;</span><span class="p">:</span> <span class="s1">&#39;bedding&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;հիգիենայի պարագաներ&#39;</span><span class="p">:</span> <span class="s1">&#39;hygiene-items&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;խոհանոց&#39;</span><span class="p">:</span> <span class="s1">&#39;kitchen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;բար&#39;</span><span class="p">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;բեմ&#39;</span><span class="p">:</span> <span class="s1">&#39;stage&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;պարահրապարակ&#39;</span><span class="p">:</span> <span class="s1">&#39;dance-floor&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;աուդիո համակարգ&#39;</span><span class="p">:</span> <span class="s1">&#39;audio-system&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;կարաոկե&#39;</span><span class="p">:</span> <span class="s1">&#39;karaoke&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;պրոյեկտոր&#39;</span><span class="p">:</span> <span class="s1">&#39;projector&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;խաղային ավտոմատներ&#39;</span><span class="p">:</span> <span class="s1">&#39;gaming-machines&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;սեղանի խաղեր&#39;</span><span class="p">:</span> <span class="s1">&#39;board-games&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;էլեկտրականություն&#39;</span><span class="p">:</span> <span class="s1">&#39;electricity&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ջրամատակարարում&#39;</span><span class="p">:</span> <span class="s1">&#39;water-supply&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;գազ&#39;</span><span class="p">:</span> <span class="s1">&#39;gas&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;կոյուղի&#39;</span><span class="p">:</span> <span class="s1">&#39;sewerage&#39;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">item_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_dict</span><span class="p">[</span><span class="n">it</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">item_dict</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Robert Arustamyan.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
