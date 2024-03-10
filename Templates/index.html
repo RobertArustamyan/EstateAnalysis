@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Prediction Form</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    background-color: #4CAF50;
+    background-image: linear-gradient(to bottom, #4CAF50, #2196F3);
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+}
+
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input[type="number"],
+select {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    display: block; /* Ensures the button is displayed as a block element */
+    margin: 15px auto 0; /* Centers the button horizontally and adds space between the button and other form elements */
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.checkbox-group {
+    text-align: center; /* Center contents horizontally */
+}
+
+.checkbox-group label,
+.checkbox-group input[type="checkbox"] {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <h2>Price Prediction Form</h2>
+    <form action="/predict" method="post">
+        <label for="buildingtype">Building Type:</label>
+        <select id="buildingtype" name="buildingtype">
+            <option value="stone">Stone</option>
+            <option value="monolith">Monolith</option>
+            <option value="panel">Panel</option>
+            <option value="brick">Brick</option>
+            <option value="tape">Tape</option>
+            <option value="wooden">Wooden</option>
+        </select><br><br>
+
+        <label for="repairstatus">Repair Status:</label>
+        <select id="repairstatus" name="repairstatus">
+            <option value="capital-reconstructed">Capital Reconstructed</option>
+            <option value="designer-style">Designer Style</option>
+            <option value="euro">Euro</option>
+            <option value="cosmetic">Cosmetic</option>
+            <option value="oldrepair">Old Repaired</option>
+            <option value="unrepaired">Unrepaired</option>
+            <option value="partical">Partical</option>
+
+        </select><br><br>
+        <label for="latitude">Latitude:</label>
+        <input type="number" id="latitude" name="latitude" step="0.000001" min="0"><br><br>
+
+        <label for="longitude">Longitude:</label>
+        <input type="number" id="longitude" name="longitude" step="0.000001" min="0"><br><br>
+
+        <label for="area">Area (m²):</label>
+        <input type="number" id="area" name="area" min="0"><br><br>
+
+        <label for="floorcount">Floor Count:</label>
+        <input type="number" id="floorcount" name="floorcount" min="0"><br><br>
+
+        <label for="roomcount">Room Count:</label>
+        <input type="number" id="roomcount" name="roomcount" min="0"><br><br>
+
+        <label for="bathroomcount">Bathroom Count:</label>
+        <input type="number" id="bathroomcount" name="bathroomcount" min="0"><br><br>
+
+        <label for="balcony">Balcony:</label>
+        <select id="balcony" name="balcony">
+            <option value="notavailable">Not available</option>
+            <option value="close">Close balcony</option>
+            <option value="open">Open balcony</option>
+        </select><br><br>
+
+        <div class="checkbox-group">
+            <label for="elevator">Elevator:</label>
+            <input type="checkbox" id="elevator" name="elevator">
+
+
+            <label for="agency">Agency:</label>
+            <input type="checkbox" id="agency" name="agency">
+
+
+            <label for="coveredparking">Covered Parking:</label>
+            <input type="checkbox" id="coveredparking" name="coveredparking">
+        </div>
+
+        <button type="submit">Predict Price</button>
+    </form>
+</body>
+</html>
