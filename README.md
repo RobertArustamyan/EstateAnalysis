@@ -25,7 +25,7 @@ To get started with using our House Price Prediction application, follow these s
 2. Install the required dependencies by running:       
 `pip install -r requirements.txt`    
 This will install all the necessary packages listed in the `requirements.txt` file.
-3. Run `house.parse_link()` in `parse_logic.py` to obtain the necessary data. (Note: The data file is over 100MB and cannot be included in this repository).
+3. Run `house.parse_link()` in `parse_logic.py` to obtain the necessary data. (Note: The data file is over 100MB and cannot be included in this repository. Your data should look like this after parsing [Example Data](Data/first_10_rows.csv)).
 4. Run `Analyse.ipynb` to model the ML model. (Note: The model file is over 600MB and cannot be included in this repository).
 5. Run the application using `app.py`.
 
