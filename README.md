@@ -1,3 +1,10 @@
+[![Python](https://img.shields.io/badge/Python-3.6%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Pandas Version](https://img.shields.io/badge/Pandas-1.3.3-orange?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![NumPy Version](https://img.shields.io/badge/NumPy-1.21.3-blue?style=for-the-badge&logo=numpy&logoColor=white)](https://numpy.org/)
+[![Scikit-learn Version](https://img.shields.io/badge/Scikit--learn-0.24.2-red?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![License](https://img.shields.io/badge/License-CC--BY--NC--SA-blue.svg?style=for-the-badge)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.txt)
+
+
 # House Price Prediction Application for Armenia
 
 ---
