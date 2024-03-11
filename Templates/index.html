@@ -12,11 +12,18 @@
     padding: 0;
     background-color: #4CAF50;
     background-image: linear-gradient(to bottom, #4CAF50, #2196F3);
+    background-repeat: no-repeat;
 }
 
-h2,h3z {
+h1{
     color: #333;
     text-align: center;
+}
+
+#predicted_price {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 form {
@@ -35,17 +42,23 @@ label {
     color: #333;
 }
 
-input[type="number"],
-select {
-    width: calc(100% - 10px);
+input[type="number"]{
+    width: 490px;
+    height: 15px;
     padding: 8px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 3px;
+    border-radius: 10px;
 }
 
-input[type="checkbox"] {
-    margin-right: 5px;
+select {
+    width: 508px;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    border-radius: 10px;
 }
 
 button[type="submit"] {
@@ -53,10 +66,11 @@ button[type="submit"] {
     color: #fff;
     padding: 10px 20px;
     border: none;
-    border-radius: 3px;
+    border-radius: 10px;
     cursor: pointer;
-    display: block; /* Ensures the button is displayed as a block element */
-    margin: 15px auto 0; /* Centers the button horizontally and adds space between the button and other form elements */
+    display: block;
+    margin: 15px auto 0;
+
 }
 
 button[type="submit"]:hover {
@@ -64,22 +78,32 @@ button[type="submit"]:hover {
 }
 
 .checkbox-group {
-    text-align: center; /* Center contents horizontally */
+    width: 450px;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.checkbox-group > div {
+    margin-right: 20px;
 }
 
 .checkbox-group label,
 .checkbox-group input[type="checkbox"] {
     display: inline-block;
-    margin-left: 10px;
+
+    margin: 0 0 0 0;
+
 }
 
     </style>
 </head>
 <body>
-    <h2>Price Prediction Form</h2>
+    <h1>Price Prediction Form</h1>
     <form action="/predict" method="post">
         <label for="buildingtype">Building Type:</label>
         <select id="buildingtype" name="buildingtype">
+            <option value="0" hidden>Choose Building Type</option>
             <option value="stone">Stone</option>
             <option value="monolith">Monolith</option>
             <option value="panel">Panel</option>
@@ -90,6 +114,7 @@ button[type="submit"]:hover {
 
         <label for="repairstatus">Repair Status:</label>
         <select id="repairstatus" name="repairstatus">
+            <option value="0" hidden>Choose Repair Status</option>
             <option value="capital-reconstructed">Capital Reconstructed</option>
             <option value="designer-style">Designer Style</option>
             <option value="euro">Euro</option>
@@ -117,29 +142,32 @@ button[type="submit"]:hover {
         <label for="bathroomcount">Bathroom Count:</label>
         <input type="number" id="bathroomcount" name="bathroomcount" min="0"><br><br>
 
-        <label for="balcony">Balcony:</label>
+        <label for="balcony">Balcony Type:</label>
         <select id="balcony" name="balcony">
+            <option value="0" hidden>Choose Balcony Type</option>
             <option value="notavailable">Not available</option>
             <option value="close">Close balcony</option>
             <option value="open">Open balcony</option>
         </select><br><br>
 
         <div class="checkbox-group">
-            <label for="elevator">Elevator:</label>
-            <input type="checkbox" id="elevator" name="elevator">
-
-
-            <label for="agency">Agency:</label>
-            <input type="checkbox" id="agency" name="agency">
-
-
-            <label for="coveredparking">Covered Parking:</label>
-            <input type="checkbox" id="coveredparking" name="coveredparking">
+            <div>
+                <label for="elevator">Elevator:</label>
+                <input type="checkbox" id="elevator" name="elevator">
+            </div>
+            <div>
+                <label for="agency">Agency:</label>
+                <input type="checkbox" id="agency" name="agency">
+            </div>
+            <div>
+                <label for="coveredparking">Covered Parking:</label>
+                <input type="checkbox" id="coveredparking" name="coveredparking">
+            </div>
         </div>
 
         <button type="submit">Predict Price</button>
         {% if predicted_price %}
-        <h3>Predicted Price: {{ predicted_price }}</h3>
+        <p id="predicted_price">Predicted Price: {{ predicted_price }}$</p>
         {% endif %}
     </form>
 
