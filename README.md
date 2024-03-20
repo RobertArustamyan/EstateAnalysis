@@ -46,6 +46,11 @@ After running `app.py` on `http://127.0.0.1:5000` you will see this page.
 After clicking the `Predict Price` button, the price will appear below the button.
 
 ![](Screenshots/Price.png)
+
+Note! You can find house latitude and longtitude [here](https://yandex.com/maps/)
+
+![](Screenshots/image.png)
+
 ## Documentation
 
 ---
