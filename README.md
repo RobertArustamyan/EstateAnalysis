@@ -64,16 +64,6 @@ For price prediction is used RandomForest model that fits best for needs of accu
 Screenshot of model's Mean Squared Error, Mean Absolute Error, and R^2 score (R-squared).     
 ![](Screenshots/RandomForestErrors.png)   
 
-## Contributing
-
----
-I welcome contributions from the community! If you'd like to contribute to this project, please follow these guidelines:
-
-1. Fork this repository.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes and ensure tests pass.
-4. Submit a pull request with a clear description of your changes.
-
 ## License
 
 ---
